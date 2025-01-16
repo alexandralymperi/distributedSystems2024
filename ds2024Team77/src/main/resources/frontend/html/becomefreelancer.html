@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Become a Freelancer</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('images/main_index.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .homepage-btn {
+            position: absolute;
+            top: 20px;          
+            right: 20px;         
+        }
+    
+        .homepage-btn img {
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        .homepage-btn img:hover {
+            transform: scale(1.2); 
+        }
+    
+        .form-container {
+            background: rgb(0, 0, 0);
+            padding: 30px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+    
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        form, label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+    
+        input, textarea, select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #88878a;
+            border-radius: 5px;
+        }
+    
+        textarea {
+            resize: vertical;
+        }
+    
+        button {
+            width: 50%;
+            padding: 10px;
+            background: #575656;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: padding 0.7s;
+            margin: 0 auto; 
+            display: block; 
+        }
+    
+        button:focus {
+            background-color: #3b3a3a;
+        }
+    
+        button:hover {
+            background: #cfced2;
+            color: rgb(0, 0, 0);
+            width: 70%;
+            border-radius: 5px;
+            font-size: 20px;
+            box-shadow: 0px 5px 5px #888888;
+            padding: 15px;
+            transition: padding 0.7s;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ff01bb;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <div class="homepage-btn">
+        <a href="../../static/index.html"><img src="images/homepage.png" alt="Profile Photo"></a>
+    </div>
+
+    <div class="form-container">
+        <h1>Become a Freelancer</h1>
+
+        <form id="freelancer-form">
+        
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Your full name" required>
+            
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Your email address" required>
+            
+            <label for="skills">Your Skills</label>
+            <input type="text" id="skills" name="skills" placeholder="E.g., Web Development, Graphic Design, etc." required>
+            
+            <label for="experience">Experience (in years)</label>
+            <select id="experience" name="experience" required>
+                <option value="">Select...</option>
+                <option value="0-1">0-1 years</option>
+                <option value="2-3">2-3 years</option>
+                <option value="4-5">4-5 years</option>
+                <option value="5+">5+ years</option>
+            </select>
+   
+            <label for="bio">Short Bio</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="Tell us a bit about yourself..." required></textarea>
+         
+            <button type="submit">Apply Now</button>
+        </form>
+
+        <div class="success-message" id="success-message">
+            Application Successful! 
+        </div>
+    </div>
+</body>
+
+<script>
+    const form = document.getElementById('freelancer-form');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+
+        successMessage.style.display = 'block';
+
+        form.reset();
+
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    });
+</script>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Freelancing</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('../frontend/html/images/main_index.jpg') no-repeat center center fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+           
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        header .auth-button a,
+        header .freelancer-btn a {
+            color: #ffffff;
+            background-color: #ff01bb;
+            border: none;
+            border-radius: 40px;
+            padding: 5px 10px;
+            font-size: 20px;
+            cursor: pointer;    
+            transition: padding 0.7s;
+            font-weight: bolder;
+        }
+        header .auth-button a:hover,
+        header .freelancer-btn a:hover {
+            background: #eeb5d3;
+            border-radius: 50px;
+            padding: 10px 20px;
+            transition: padding 0.4s;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+        .projects {
+            display:grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 70px;
+            width: 70%;
+            height: 700px;
+            padding: 150px 350px;
+        
+        }
+        .project-card {
+            background-color: #000000e3;
+            border: 1px solid #000000;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgb(0, 0, 0);
+            position: relative;
+            transition: 1s
+
+            
+        }
+          
+        .project-card:hover {
+            top: -10px;
+        }
+        
+        .project-card h3 {
+            margin-top: 0;
+            color: #ff00bb;
+        }
+        .project-card p {
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="auth-button">
+            <a href="../frontend/html/login.html">Login / Register</a>
+            
+        </div>
+        <div class="freelancer-btn">
+            <a href="../frontend/html/becomefreelancer.html">Become a Freelancer Now</a>
+        </div>
+    </header>
+    
+    <main>
+        <h1>Explore Global Projects</h1>
+        <p>Browse projects from all around the world and find your next opportunity.</p>
+    
+        <div class="projects">
+            <div class="project-card">
+                <h3>Website Development for Tech Startup</h3>
+                <p>Location: San Francisco, USA</p>
+                <p>A tech startup looking for a web developer to create a responsive site for their new product.</p>
+            </div>
+            <div class="project-card">
+                <h3>Logo Design for Fashion Brand</h3>
+                <p>Location: Paris, France</p>
+                <p>A creative project to design a modern logo for an upcoming fashion brand.</p>
+            </div>
+            <div class="project-card">
+                <h3>Mobile App Development for Healthcare</h3>
+                <p>Location: London, UK</p>
+                <p>A healthcare company in need of a developer to create a mobile app for patient management.</p>
+            </div>
+            <div class="project-card">
+                <h3>E-commerce Website Design</h3>
+                <p>Location: Berlin, Germany</p>
+                <p>A fast-growing e-commerce company is seeking a UI/UX designer to enhance their website.</p>
+            </div>
+            <div class="project-card">
+                <h3>Content Writing for Blog</h3>
+                <p>Location: Sydney, Australia</p>
+                <p>Looking for a freelance writer to create engaging content for a lifestyle blog.</p>
+            </div>
+            <div class="project-card">
+                <h3>SEO Specialist for Online Store</h3>
+                <p>Location: Toronto, Canada</p>
+                <p>Looking for an SEO expert to improve search engine rankings for an online retail store.</p>
+            </div>
+        </div>
+    </main>
+    
+</body>
+</html>

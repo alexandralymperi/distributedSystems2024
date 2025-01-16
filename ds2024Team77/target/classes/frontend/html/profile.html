@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('images/main_index.jpg') no-repeat center center fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .homepage-btn {
+            position: absolute;
+            top: 20px;          
+            right: 20px;         
+        }
+    
+        .homepage-btn img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        .homepage-btn img:hover {
+            transform: scale(1.2); 
+        }
+
+        .profile-container {
+            background: rgba(0, 0, 0, 0.938);
+            padding: 100px;
+            border-radius: 80px;
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            max-width: 1800px;
+            width: 100%;
+            margin: 100px;
+        }
+
+        .project-container {
+            background: rgba(255, 254, 254, 0.938);
+            color: black;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.429);
+            max-width: 1000px;
+            width: 100%;
+            margin: 40px;
+        }
+
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .profile-info input {
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .edit-btn {
+            background: #ff01bb;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bolder;
+            transition: padding 0.7s;
+        }
+
+        .edit-btn:hover {
+            background: #eeb5d3;
+            border-radius: 70px;
+            padding: 15px 35px;
+            transition: padding 0.4s;
+        }
+
+        .bio {
+            margin-bottom: 20px;
+        }
+
+        .bio textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            resize: none;
+        }
+
+        .projects h2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="homepage-btn">
+        <a href="../../static/index.html"><img src="images/homepage.png" alt="Profile Photo"></a>
+    </div>
+
+    <div class="profile-container">
+
+        <div class="profile-header">
+
+            <div class="profile-photo">
+                <img src="images/profile_pic.webp" alt="Profile Photo">
+            </div>
+
+            <div class="profile-info">
+                <h1 id="username-display">John Bla</h1>
+                <input type="text" id="username-input" value="John Bla" style="display: none;">
+                <button class="edit-btn" id="edit-username-btn">Edit</button>
+            </div>
+
+        </div>
+
+        
+        <div class="bio">
+            <h1>About Me</h1>
+            <p id="bio-display">About me</p>
+            <textarea id="bio-input" style="display: none;">About me</textarea>
+            <button class="edit-btn" id="edit-bio-btn">Edit</button>
+        </div>
+
+        
+        <div class="projects">
+            <h1>My Projects</h1>
+
+            <div class="project-container">
+                <div class="project">
+                    <h2>Project 1</h2>
+                    <p>blablablabla</p>
+                </div>
+            </div>
+            
+            <div class="project-container">
+                <div class="project">
+                    <h2>Project 2</h2>
+                    <p>krakrakrakrakra</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
