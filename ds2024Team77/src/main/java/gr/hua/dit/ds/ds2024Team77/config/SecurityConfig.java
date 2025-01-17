@@ -52,9 +52,11 @@ public class SecurityConfig {
                                 "/v2/api-docs/**",
                                 "/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/"
                         ).permitAll()
-                        .requestMatchers("/users/**").hasRole("BASIC_USER")
+                        .requestMatchers("/projects/**").permitAll()
+                        .requestMatchers("/users/**").hasRole("BASIC")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -63,19 +65,4 @@ public class SecurityConfig {
 
     }
 
-
-    /*@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http
-                .authorizeHttpRequests((requests)->requests.requestMatchers("/","/images/**",
-                        "/js/**", "/css/**").permitAll()
-                        .anyRequest().authenticated()
-                //TODO ΠΡΟΣΘΗΚΗ URL
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home", true).permitAll())
-                .logout((logout) -> logout.permitAll());
-        return http.build();
-    }*/
 }

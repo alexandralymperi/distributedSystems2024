@@ -38,7 +38,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public Object getUsers(){ return userRepository.findAll(); }
+    public List<User> getUsers(){ return userRepository.findAll(); }
 
     @Transactional
     public Long saveUser(User user){

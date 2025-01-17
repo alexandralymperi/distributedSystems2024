@@ -1,8 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.service;
 
-import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
@@ -24,8 +22,8 @@ public class ProjectService {
     public Optional<Project> getProject(Long id){return projectRepository.findById(id);}
 
     @Transactional
-    public void saveProject(Project project){
-        projectRepository.save(project);
+    public Project saveProject(Project project){
+        return projectRepository.save(project);
     }
 
     @Transactional
@@ -45,14 +43,17 @@ public class ProjectService {
 
     @Transactional
     public boolean deleteProjectById(final Long projectId){
-        final Optional<Project> userOptional = this.projectRepository.findById(projectId);
+
+        Optional<Project> userOptional = this.projectRepository.findById(projectId);
+
         if(userOptional.isEmpty()){
             return false;
+        }else{
+            this.projectRepository.deleteById(projectId);
+            return true;
         }
-        this.projectRepository.deleteById(projectId);
-        return true;
-    }
 
+    }
 
     @Transactional
     public void approveProject(Long id) {

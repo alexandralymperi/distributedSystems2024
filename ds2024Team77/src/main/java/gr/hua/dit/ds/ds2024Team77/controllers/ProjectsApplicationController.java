@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/ProjectApplication")
 public class ProjectsApplicationController {
 

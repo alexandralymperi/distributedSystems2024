@@ -52,6 +52,14 @@ public class User {
             joinColumns = @JoinColumn(name="userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.PERSIST})
+    private List<Project> customerProjects;
+
+    @OneToMany(mappedBy = "freelancer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.PERSIST})
+    private List<Project> freelancerProjects;
+
     @OneToMany(mappedBy = "sender", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
     private List<Messages> sentMessages;
@@ -66,11 +74,11 @@ public class User {
 
     @OneToMany(mappedBy = "reviewer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
-    private List<Review> reportsLeft;
+    private List<Review> reviewsLeft;
 
     @OneToMany(mappedBy = "reviewee", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
-    private List<Review> reportsConcerning;
+    private List<Review> reviewsConcerning;
 
     @OneToMany(mappedBy = "applicant", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
@@ -150,6 +158,22 @@ public class User {
         this.roles = roles;
     }
 
+    public List<Project> getCustomerProjects() {
+        return customerProjects;
+    }
+
+    public void setCustomerProjects(List<Project> customerProjects) {
+        this.customerProjects = customerProjects;
+    }
+
+    public List<Project> getFreelancerProjects() {
+        return freelancerProjects;
+    }
+
+    public void setFreelancerProjects(List<Project> freelancerProjects) {
+        this.freelancerProjects = freelancerProjects;
+    }
+
     public List<Messages> getSentMessages() {
         return sentMessages;
     }
@@ -174,20 +198,20 @@ public class User {
         this.reportsMade = reportsMade;
     }
 
-    public List<Review> getReportsLeft() {
-        return reportsLeft;
+    public List<Review> getReviewsLeft() {
+        return reviewsLeft;
     }
 
-    public void setReportsLeft(List<Review> reportsLeft) {
-        this.reportsLeft = reportsLeft;
+    public void setReviewsLeft(List<Review> reportsLeft) {
+        this.reviewsLeft = reviewsLeft;
     }
 
-    public List<Review> getReportsConcerning() {
-        return reportsConcerning;
+    public List<Review> getReviewsConcerning() {
+        return reviewsConcerning;
     }
 
-    public void setReportsConcerning(List<Review> reportsConcerning) {
-        this.reportsConcerning = reportsConcerning;
+    public void setReviewsConcerning(List<Review> reviewsConcerning) {
+        this.reviewsConcerning = reviewsConcerning;
     }
 
     public List<ProjectApplications> getApplications() {
@@ -204,6 +228,16 @@ public class User {
 
     public void setProfile(UserProfile profile) {
         this.profile = profile;
+    }
+
+    public void assignCustomerToProject(Project project) {
+        customerProjects.add(project);
+        project.setCustomer(this);
+    }
+
+    public void assignFreelancerToProject(Project project) {
+        freelancerProjects.add(project);
+        project.setFreelancer(this);
     }
 
     //toString method

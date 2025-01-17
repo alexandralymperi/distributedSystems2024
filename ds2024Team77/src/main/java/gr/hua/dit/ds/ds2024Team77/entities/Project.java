@@ -1,7 +1,11 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -9,12 +13,13 @@ import java.util.List;
 public class Project {
 
     //Columns
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Long Id;
 
-    @Column(nullable = false)
+    @Column
+    @NotBlank
     private String title;
 
     @Column
@@ -22,7 +27,8 @@ public class Project {
     private String description;
 
     @Column
-    @NotBlank
+    @NotNull
+    @Min(value = 1)
     private float pay;
 
     @Column
@@ -30,26 +36,36 @@ public class Project {
     private String status;
 
     //Mappings
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
     private User customer;
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "freelancer_id")
     private User freelancer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.PERSIST})
     private List<ProjectApplications> applications;
 
 
     //Constructors
-    public Project(String title, String description, float pay, String status, User customer, User freelancer) {
+    /*public Project(String title, String description, float pay, String status, User customer, User freelancer) {
         this.title = title;
         this.description = description;
         this.pay = pay;
         this.status = "PENDING_APPROVAL";
         this.customer = customer;
         this.freelancer = freelancer;
+    }*/
+
+    public Project(String title, String description, float pay, String status) {
+        this.title = title;
+        this.description = description;
+        this.pay = pay;
+        this.status = status;
     }
 
     public Project() {

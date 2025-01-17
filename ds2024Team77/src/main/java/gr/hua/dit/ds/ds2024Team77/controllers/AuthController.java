@@ -58,10 +58,10 @@ public class AuthController {
         roleRepository.updateOrInsert(role_admin);
     }
 
-    @GetMapping("/login")
+    /*@GetMapping("/login")
     public String login(){
         return "auth/login";
-    }
+    }*/
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -101,7 +101,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getUsername(),signUpRequest.getName(), signUpRequest.getSurname(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
