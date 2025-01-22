@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/messages")
 public class MessagesController {
 
@@ -72,6 +72,7 @@ public class MessagesController {
         mRepository.save(message);
         return "messages";
     }
+
     @GetMapping("/change")
     public String changeMessageStatusToRead(@PathVariable Long messageId, Model model) {
         Messages message = mRepository.findById(messageId)
