@@ -1,10 +1,12 @@
 package gr.hua.dit.ds.ds2024Team77.service;
 
+import gr.hua.dit.ds.ds2024Team77.entities.Project;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import gr.hua.dit.ds.ds2024Team77.repository.MessagesRepository;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessagesService {
@@ -21,8 +23,8 @@ public class MessagesService {
     }
 
     @Transactional
-    public Messages getMessages(Integer message_id){
-        return messagesRepository.findById(message_id).get();
+    public Optional<Messages> getMessage(Long message_id){
+        return messagesRepository.findById(message_id);
     }
 
     @Transactional
@@ -31,7 +33,7 @@ public class MessagesService {
     }
 
     @Transactional
-    public void changeMessageStatusToRead(Integer messageId) {
+    public void changeMessageStatusToRead(Long messageId) {
         Messages message = messagesRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found with ID: " + messageId));
 
@@ -40,7 +42,7 @@ public class MessagesService {
     }
 
     @Transactional
-    public void editMessageContents(Integer messageId, Integer senderId, String newContent) {
+    public void editMessageContents(Long messageId, Integer senderId, String newContent) {
         Messages message = messagesRepository.findById(messageId).get();
 
         message.setContents(newContent);

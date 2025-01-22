@@ -71,12 +71,4 @@ public class ProjectsController {
 
     }
 
-
-
-
 }
-
-
-
-
-

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProjectApplicationsRepository extends JpaRepository<ProjectApplications, Integer> {
-    List<ProjectApplications> findApplicationsByProject_Id(Integer project);
+public interface ProjectApplicationsRepository extends JpaRepository<ProjectApplications, Long> {
+    List<ProjectApplications> findApplicationsByProject_Id(Long project);
 }

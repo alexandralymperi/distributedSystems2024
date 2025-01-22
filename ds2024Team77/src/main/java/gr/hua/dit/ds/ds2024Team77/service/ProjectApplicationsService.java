@@ -24,29 +24,33 @@ public class ProjectApplicationsService {
     }
 
     @Transactional
-    public Optional<ProjectApplications> getProjectApplication(Integer id){return (projectApplicationsRepository.findById(id));}
+    public Optional<ProjectApplications> getProjectApplication(Long id) {
+        return (projectApplicationsRepository.findById(id));
+    }
 
     @Transactional
-    public void saveProjectApplication(ProjectApplications projectApplications){
+    public void saveProjectApplication(ProjectApplications projectApplications) {
         projectApplicationsRepository.save(projectApplications);
     }
 
     @Transactional
-    public List<ProjectApplications> getProjectApplications(){ return projectApplicationsRepository.findAll(); }
+    public List<ProjectApplications> getProjectApplications() {
+        return projectApplicationsRepository.findAll();
+    }
 
     @Transactional
-    public void deleteApplication(Integer applicationId) {
+    public void deleteApplication(Long applicationId) {
         ProjectApplications application = projectApplicationsRepository.findById(applicationId).get();
         projectApplicationsRepository.delete(application);
     }
 
     @Transactional
-    public List<ProjectApplications> getApplicationsByProject(Integer projectId) {
+    public List<ProjectApplications> getApplicationsByProject(Long projectId) {
         return projectApplicationsRepository.findApplicationsByProject_Id(projectId);
     }
 
     @Transactional
-    public List<ProjectApplications> getProjectApplicationsByStatus(Integer projectId, String status) {
+    public List<ProjectApplications> getProjectApplicationsByStatus(Long projectId, String status) {
         List<ProjectApplications> applications = getApplicationsByProject(projectId);
 
         return applications.stream()
@@ -55,7 +59,7 @@ public class ProjectApplicationsService {
     }
 
     @Transactional
-    public void approveApplication(Integer applicationId) {
+    public void approveApplication(Long applicationId) {
         ProjectApplications application = projectApplicationsRepository.findById(applicationId).get();
         application.setStatus("APPROVED");
         projectApplicationsRepository.save(application);
@@ -70,11 +74,9 @@ public class ProjectApplicationsService {
     }
 
     @Transactional
-    public void rejectApplication(Integer applicationId) {
+    public void rejectApplication(Long applicationId) {
         ProjectApplications application = projectApplicationsRepository.findById(applicationId).get();
         application.setStatus("REJECTED");
         projectApplicationsRepository.save(application);
     }
-
-
 }
