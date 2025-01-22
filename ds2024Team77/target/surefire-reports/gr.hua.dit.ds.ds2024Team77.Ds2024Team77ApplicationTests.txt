@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: gr.hua.dit.ds.ds2024Team77.Ds2024Team77ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 25.49 s -- in gr.hua.dit.ds.ds2024Team77.Ds2024Team77ApplicationTests
