@@ -1,6 +1,13 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 
+import gr.hua.dit.ds.ds2024Team77.entities.Report;
+import gr.hua.dit.ds.ds2024Team77.entities.Review;
+import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
+import gr.hua.dit.ds.ds2024Team77.service.UserService;
+import org.apache.logging.log4j.message.Message;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.repository.MessagesRepository;
@@ -9,50 +16,65 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/messages")
 public class MessagesController {
 
-
     private MessagesRepository mRepository;
     private MessagesService mService;
+    private UserService userService;
 
-    public MessagesController(MessagesRepository mRepository, MessagesService mService) {
+    public MessagesController(MessagesRepository mRepository, MessagesService mService, UserService userService) {
         this.mRepository = mRepository;
         this.mService = mService;
+        this.userService = userService;
     }
 
     @GetMapping("")
     public List<Messages> getMessages(){
         return mService.getMessages();
-    } //Αυτό δεν ξέρω αν χρειάζετε.
-
-    @GetMapping("/new")
-    public String newMessages(Model model){
-        Messages message = new Messages();
-        model.addAttribute("message",message ); // Στο attributeName δεν ξέρω αν θέλει report ή Report
-        return "messages";
     }
 
-    @PostMapping("/new")
-    public void saveMessages(@PathVariable("/Messages") Messages messages, Model model){
-        mService.saveMessages(messages);
-        model.addAttribute("messages", mService.getMessages());
-        model.addAttribute("successMessage", "Message added successfully!");
-        mRepository.save(messages);
+    @GetMapping("/{messageId}")
+    public ResponseEntity<Messages> getMessage(@PathVariable Long messageId){
+        Optional<Messages> message = mService.getMessage(messageId);
+        return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
+
+    @PostMapping("")
+    public void createMessage(@RequestBody Messages message, @AuthenticationPrincipal UserDetailsImpl auth){
+        message.setSender(userService.getUser(auth.getId()).get());
+        mService.saveMessages(message);
+    }
+
+//    @GetMapping("/new")
+//    public String newMessages(Model model){
+//        Messages message = new Messages();
+//        model.addAttribute("message",message ); // Στο attributeName δεν ξέρω αν θέλει report ή Report
+//        return "messages";
+//    }
+
+//    @PostMapping("/new")
+//    public void saveMessages(@PathVariable("/Messages") Messages messages, Model model){
+//        mService.saveMessages(messages);
+//        model.addAttribute("messages", mService.getMessages());
+//        model.addAttribute("successMessage", "Message added successfully!");
+//        mRepository.save(messages);
+//    }
 
     @GetMapping("/edit")
-    public String editMessageContents(@PathVariable Integer messageId, Integer senderId, String newContent, Model model) {
+    public String editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {
         Messages message = mRepository.findById(messageId).get();
 
         message.setContents(newContent);
         mRepository.save(message);
         return "messages";
     }
+
     @GetMapping("/change")
-    public String changeMessageStatusToRead(@PathVariable Integer messageId, Model model) {
+    public String changeMessageStatusToRead(@PathVariable Long messageId, Model model) {
         Messages message = mRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found with ID: " + messageId));
 
