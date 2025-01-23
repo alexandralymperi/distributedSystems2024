@@ -60,7 +60,7 @@ public class ProjectsController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<String> deleteCourse(@PathVariable Long projectId){
+    public ResponseEntity<String> deleteProject(@PathVariable Long projectId){
 
         boolean result = this.pService.deleteProjectById(projectId);
         if(result){

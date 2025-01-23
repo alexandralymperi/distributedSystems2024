@@ -48,4 +48,18 @@ public class MessagesService {
         message.setContents(newContent);
         messagesRepository.save(message);
     }
+
+    @Transactional
+    public boolean deleteMessageById(final Long messageId){
+
+        Optional<Messages> userOptional = this.messagesRepository.findById(messageId);
+
+        if(userOptional.isEmpty()){
+            return false;
+        }else{
+            this.messagesRepository.deleteById(messageId);
+            return true;
+        }
+    }
+
 }

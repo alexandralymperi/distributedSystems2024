@@ -6,6 +6,8 @@ import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,9 +41,17 @@ public class ProjectApplicationsService {
     }
 
     @Transactional
-    public void deleteApplication(Long applicationId) {
-        ProjectApplications application = projectApplicationsRepository.findById(applicationId).get();
-        projectApplicationsRepository.delete(application);
+    public boolean deleteApplication(Long applicationId) {
+
+        Optional<ProjectApplications> userOptional = this.projectApplicationsRepository.findById(applicationId);
+
+        if(userOptional.isEmpty()){
+            return false;
+        }else{
+            this.projectApplicationsRepository.deleteById(applicationId);
+            return true;
+        }
+
     }
 
     @Transactional
