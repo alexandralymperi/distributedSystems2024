@@ -1,13 +1,11 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 
-import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
 import gr.hua.dit.ds.ds2024Team77.entities.Report;
 import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.apache.logging.log4j.message.Message;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.web.servlet.function.ServerResponse.status;
-
-@Controller
+@RestController
 @RequestMapping("/messages")
 public class MessagesController {
 
@@ -68,24 +64,13 @@ public class MessagesController {
 //        mRepository.save(messages);
 //    }
 
-    @GetMapping("/show")
-    public List<Messages> showMessages(){
-        return this.mService.getMessages();
-    }
-
-    @GetMapping("/shows")
-    public ResponseEntity<Messages> showMessage(@PathVariable Long MessageId){
-        Optional<Messages> message = this.mService.getMessage(MessageId);
-        return message.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @GetMapping("/edit")
-    public ResponseEntity<Messages> editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {
+    public String editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {
         Messages message = mRepository.findById(messageId).get();
 
         message.setContents(newContent);
         mRepository.save(message);
-        return ResponseEntity.setStatus(HttpStatus.OK).body("User deleted successfully.");
+        return "messages";
     }
 
     @GetMapping("/change")
