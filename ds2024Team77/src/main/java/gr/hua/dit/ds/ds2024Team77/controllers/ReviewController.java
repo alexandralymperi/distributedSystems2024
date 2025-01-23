@@ -1,6 +1,7 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
+import gr.hua.dit.ds.ds2024Team77.entities.Report;
 import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.repository.ReviewRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ReviewService;
@@ -55,11 +56,14 @@ public class ReviewController {
 //    }
 
     @GetMapping("/show-reviews-by")
-    public String showReviewsByReviewee(@PathVariable Review review, List<Review> reviewList, Long revieweeId, Model model){
-        Optional<Review> review1 = rService.getReview(revieweeId);
-        model.addAttribute("reviewList", review1); //παίζει αντί για reviewList να θέλει Review.
-        rRepository.getByReviewee_Id(revieweeId);
-        return "reviews";
+    public ResponseEntity<Review> showReviewsByReviewee(@PathVariable Review review, Long revieweeId){
+        Optional<Review> reviewee = this.rService.getReview(revieweeId);
+        return reviewee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/show")
+    public List<Review> showReviews(){
+        return this.rService.getReviews();
     }
 
 }

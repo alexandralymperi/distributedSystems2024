@@ -49,6 +49,17 @@ public class ProjectsApplicationController {
         paService.saveProjectApplication(projectapplication);
     }
 
+    @GetMapping("/show")
+    public List<ProjectApplications> showProjectApplications(){
+        return this.paService.getProjectApplications();
+    }
+
+    @GetMapping("/shows")
+    public ResponseEntity<ProjectApplications> showProjectApplication(@PathVariable Long ProjectApplicationId){
+        Optional<ProjectApplications> projectapplication = this.paService.getProjectApplication(ProjectApplicationId);
+        return projectapplication.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/delete")
     public void deleteApplication(Long applicationId) {
         ProjectApplications application = paRepository.findById(applicationId).get();

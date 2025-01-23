@@ -3,6 +3,7 @@ package gr.hua.dit.ds.ds2024Team77.controllers;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.entities.Report;
 import gr.hua.dit.ds.ds2024Team77.entities.Review;
+import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.ReportRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ReportService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
@@ -63,9 +64,14 @@ public class ReportController {
 //    }
 
     @GetMapping("/show")
-    public String showReport(@PathVariable Long id , Model model){
-        //model.addAttribute("reportList", report);
-        return "report";
+    public List<Report> showReports(){
+        return this.rService.getReports();
+    }
+
+    @GetMapping("/shows")
+    public ResponseEntity<Report> showReport(@PathVariable Long reportId){
+        Optional<Report> report = this.rService.getReport(reportId);
+        return report.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
