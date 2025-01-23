@@ -7,6 +7,7 @@ import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -49,10 +50,33 @@ public class ProjectsApplicationController {
         paService.saveProjectApplication(projectapplication);
     }
 
+    @GetMapping("/show")
+    public List<ProjectApplications> showProjectApplications(){
+        return this.paService.getProjectApplications();
+    }
+
+    @GetMapping("/shows")
+    public ResponseEntity<ProjectApplications> showProjectApplication(@PathVariable Long ProjectApplicationId){
+        Optional<ProjectApplications> projectapplication = this.paService.getProjectApplication(ProjectApplicationId);
+        return projectapplication.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/delete")
     public void deleteApplication(Long applicationId) {
         ProjectApplications application = paRepository.findById(applicationId).get();
         paRepository.delete(application);
+    }
+
+    @DeleteMapping("/{applicationId}")
+    public ResponseEntity<String> deleteProjectApplication(@PathVariable Long applicationId){
+
+        boolean result = this.paService.deleteApplication(applicationId);
+        if(result){
+            return ResponseEntity.status(HttpStatus.OK).body("Application deleted successfully.");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application deletion unsuccessful.");
+        }
+
     }
 
     @GetMapping("/Date") ///????

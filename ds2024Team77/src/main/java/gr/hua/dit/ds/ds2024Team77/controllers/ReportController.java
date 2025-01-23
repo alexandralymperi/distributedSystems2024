@@ -3,10 +3,12 @@ package gr.hua.dit.ds.ds2024Team77.controllers;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.entities.Report;
 import gr.hua.dit.ds.ds2024Team77.entities.Review;
+import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.ReportRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ReportService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -63,9 +65,26 @@ public class ReportController {
 //    }
 
     @GetMapping("/show")
-    public String showReport(@PathVariable Long id , Model model){
-        //model.addAttribute("reportList", report);
-        return "report";
+    public List<Report> showReports(){
+        return this.rService.getReports();
+    }
+
+    @GetMapping("/shows")
+    public ResponseEntity<Report> showReport(@PathVariable Long reportId){
+        Optional<Report> report = this.rService.getReport(reportId);
+        return report.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{reportId}")
+    public ResponseEntity<String> deleteReport(@PathVariable Long reportId){
+
+        boolean result = this.rService.deleteReportById(reportId);
+        if(result){
+            return ResponseEntity.status(HttpStatus.OK).body("Report deleted successfully.");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Report deletion unsuccessful.");
+        }
+
     }
 
 }

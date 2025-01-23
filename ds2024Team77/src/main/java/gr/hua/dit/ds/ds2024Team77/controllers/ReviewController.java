@@ -1,11 +1,13 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
+import gr.hua.dit.ds.ds2024Team77.entities.Report;
 import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.repository.ReviewRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ReviewService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -45,21 +47,37 @@ public class ReviewController {
         rService.saveReview(review);
     }
 
-//    @PostMapping("/new")
-//    public String saveReview(@ModelAttribute("/Review") Review review, Model model){
-//        rService.saveReview(review);
-//        model.addAttribute("Review", rService.getReview(review.getId()));
-//        model.addAttribute("successMessage", "Review added successfully!");
-//        rRepository.save(review); //Αυτή την γραμμή δεν ξέρω αν την χρειάζετε.
-//        return "reviews";
-//    }
+
 
     @GetMapping("/show-reviews-by")
-    public String showReviewsByReviewee(@PathVariable Review review, List<Review> reviewList, Long revieweeId, Model model){
-        Optional<Review> review1 = rService.getReview(revieweeId);
-        model.addAttribute("reviewList", review1); //παίζει αντί για reviewList να θέλει Review.
-        rRepository.getByReviewee_Id(revieweeId);
-        return "reviews";
+    public ResponseEntity<Review> showReviewsByReviewee(@PathVariable Review review, Long revieweeId){
+        Optional<Review> reviewee = this.rService.getReview(revieweeId);
+        return reviewee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/show")
+    public List<Review> showReviews(){
+        return this.rService.getReviews();
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId){
+
+        boolean result = this.rService.deleteReviewById(reviewId);
+        if(result){
+            return ResponseEntity.status(HttpStatus.OK).body("Review deleted successfully.");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review deletion unsuccessful.");
+        }
+
+    }
+
+    //    @PostMapping("/new")
+    //    public String saveReview(@ModelAttribute("/Review") Review review, Model model){
+    //        rService.saveReview(review);
+    //        model.addAttribute("Review", rService.getReview(review.getId()));
+    //        model.addAttribute("successMessage", "Review added successfully!");
+    //        rRepository.save(review); //Αυτή την γραμμή δεν ξέρω αν την χρειάζετε.
+    //        return "reviews";
+    //    }
 }
