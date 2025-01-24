@@ -2,6 +2,7 @@ package gr.hua.dit.ds.ds2024Team77.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class FreelancerApplication {
@@ -18,13 +19,26 @@ public class FreelancerApplication {
     @Column
     private String description;
 
-    public FreelancerApplication(User apFreelancer, String description) {
+    @Column
+    @NotBlank
+    private String status;
+
+    public FreelancerApplication(User apFreelancer, String description, String status) {
         this.apFreelancer = apFreelancer;
         this.description = description;
+        this.status = status;
     }
 
     public FreelancerApplication() {
 
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getId() {
@@ -51,5 +65,13 @@ public class FreelancerApplication {
         this.description = description;
     }
 
-
+    @Override
+    public String toString() {
+        return "FreelancerApplication{" +
+                "Id=" + Id +
+                ", apFreelancer=" + apFreelancer +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
