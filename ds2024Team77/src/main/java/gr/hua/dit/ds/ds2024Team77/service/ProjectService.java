@@ -56,13 +56,6 @@ public class ProjectService {
     }
 
     @Transactional
-    public void approveProject(Long id) {
-        Project project = projectRepository.findById(id).get();
-        project.setStatus("APPROVED");
-        projectRepository.save(project);
-    }
-
-    @Transactional
     public void changeProjectStatusToOngoing(Long id) {
         Project project = projectRepository.findById(id).get();
         project.setStatus("ONGOING");
@@ -79,7 +72,22 @@ public class ProjectService {
         return projectRepository.findByCustomer_Id(customerId);
     }
 
+    @Transactional
     public List<Project> getActiveProjects() {
         return projectRepository.findByStatus("ACTIVE");
     }
+
+
+    public boolean approveProject(Long projectId) {
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
+        if (optionalProject.isPresent()) {
+            Project project = optionalProject.get();
+            project.setStatus("ACTIVE");
+            projectRepository.save(project);
+            return true;
+        }
+        return false;
+    }
+
+
 }

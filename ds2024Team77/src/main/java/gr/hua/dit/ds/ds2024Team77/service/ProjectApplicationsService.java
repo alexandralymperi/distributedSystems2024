@@ -19,7 +19,8 @@ public class ProjectApplicationsService {
     private ProjectRepository projectRepository;
     private ProjectService projectService;
 
-    public ProjectApplicationsService(ProjectApplicationsRepository projectApplicationsRepository, ProjectRepository projectRepository, ProjectService projectService) {
+    public ProjectApplicationsService(ProjectApplicationsRepository projectApplicationsRepository,
+                                      ProjectRepository projectRepository, ProjectService projectService) {
         this.projectApplicationsRepository = projectApplicationsRepository;
         this.projectRepository = projectRepository;
         this.projectService = projectService;

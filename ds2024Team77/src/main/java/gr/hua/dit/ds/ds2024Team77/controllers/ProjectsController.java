@@ -1,7 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
-import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
@@ -9,13 +8,10 @@ import gr.hua.dit.ds.ds2024Team77.service.ProjectService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +80,16 @@ public class ProjectsController {
     @GetMapping("/freelancer")
     public List<Project> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
         return pService.getProjectsByFreelancer_Id(auth.getId());
+    }
+
+    @PutMapping("/{projectId}/approve")
+    public ResponseEntity<String> approveProject(@PathVariable Long projectId) {
+        boolean result = pService.approveProject(projectId);
+        if (result) {
+            return ResponseEntity.status(HttpStatus.OK).body("Project approved successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found.");
+        }
     }
 
 }

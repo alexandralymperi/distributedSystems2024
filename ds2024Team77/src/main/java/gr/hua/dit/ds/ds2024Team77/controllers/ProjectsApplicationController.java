@@ -20,15 +20,14 @@ import java.util.Optional;
 @RequestMapping("/ProjectApplication")
 public class ProjectsApplicationController {
 
-    ArrayList<ProjectApplications> paList = new ArrayList<ProjectApplications>();
     private ProjectApplicationsRepository paRepository;
     private ProjectApplicationsService paService;
     private UserService userService;
 
     private ProjectService projectService;
 
-    public ProjectsApplicationController(ArrayList<ProjectApplications> paList, ProjectApplicationsRepository paRepository, ProjectApplicationsService paService, UserService userService, ProjectService projectService) {
-        this.paList = paList;
+    public ProjectsApplicationController(ProjectApplicationsRepository paRepository, ProjectApplicationsService paService,
+                                         UserService userService, ProjectService projectService) {
         this.paRepository = paRepository;
         this.paService = paService;
         this.userService = userService;
@@ -41,7 +40,7 @@ public class ProjectsApplicationController {
     }
 
     @GetMapping("/{projectapplicationId}")
-    public ResponseEntity<ProjectApplications> getReport(@PathVariable Long projectapplicationId){
+    public ResponseEntity<ProjectApplications> getProjectApplication(@PathVariable Long projectapplicationId){
         Optional<ProjectApplications> projectapplication = paService.getProjectApplication(projectapplicationId);
         return projectapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
@@ -52,17 +51,6 @@ public class ProjectsApplicationController {
         projectapplication.setApplicant(userService.getUser(auth.getId()).get());
         projectapplication.setProject(projectService.getProject(projectId).get());
         paService.saveProjectApplication(projectapplication);
-    }
-
-    @GetMapping("/show")
-    public List<ProjectApplications> showProjectApplications(){
-        return this.paService.getProjectApplications();
-    }
-
-    @GetMapping("/shows")
-    public ResponseEntity<ProjectApplications> showProjectApplication(@PathVariable Long ProjectApplicationId){
-        Optional<ProjectApplications> projectapplication = this.paService.getProjectApplication(ProjectApplicationId);
-        return projectapplication.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/delete")
