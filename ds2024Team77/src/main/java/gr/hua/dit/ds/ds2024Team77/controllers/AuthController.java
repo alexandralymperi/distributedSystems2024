@@ -47,22 +47,6 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostConstruct
-    public void setup() {
-        Role role_user = new Role("ROLE_BASIC");
-        Role roleFreelancer = new Role("ROLE_FREELANCER");
-        Role role_admin = new Role("ROLE_ADMIN");
-
-        roleRepository.updateOrInsert(role_user);
-        roleRepository.updateOrInsert(roleFreelancer);
-        roleRepository.updateOrInsert(role_admin);
-    }
-
-    /*@GetMapping("/login")
-    public String login(){
-        return "auth/login";
-    }*/
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         System.out.println("authentication");

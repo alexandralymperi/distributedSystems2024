@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//non-admin users
+//users
 @Entity
 @Table(	name = "users",
         uniqueConstraints = {
@@ -75,10 +75,6 @@ public class User {
     @OneToMany(mappedBy = "applicant", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
     private List<ProjectApplications> applications;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_profile_id", referencedColumnName = "Id")
-    private UserProfile profile;
 
     //Constructors
     public User(String username, String name, String surname, String email, String password) {
@@ -197,13 +193,7 @@ public class User {
         this.applications = applications;
     }
 
-    public UserProfile getProfile() {
-        return profile;
-    }
 
-    public void setProfile(UserProfile profile) {
-        this.profile = profile;
-    }
 
     public void assignCustomerToProject(Project project) {
         customerProjects.add(project);

@@ -52,14 +52,6 @@ public class Project {
 
 
     //Constructors
-    /*public Project(String title, String description, float pay, String status, User customer, User freelancer) {
-        this.title = title;
-        this.description = description;
-        this.pay = pay;
-        this.status = "PENDING_APPROVAL";
-        this.customer = customer;
-        this.freelancer = freelancer;
-    }*/
 
     public Project(String title, String description, float pay, String status) {
         this.title = title;

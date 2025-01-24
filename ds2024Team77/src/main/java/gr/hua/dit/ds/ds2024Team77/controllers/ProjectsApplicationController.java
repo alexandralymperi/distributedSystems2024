@@ -8,6 +8,7 @@ import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class ProjectsApplicationController {
         this.projectService = projectService;
     }
 
+    @Secured({"ROLE_"})
     @GetMapping("")
     public List<ProjectApplications> getProjectApplications(){
         return paService.getProjectApplications();
@@ -43,6 +45,7 @@ public class ProjectsApplicationController {
         return projectapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_FREELANCER"})
     @PostMapping("/{projectId}")
     public void createProjectApplications(@RequestBody ProjectApplications projectapplication,
                                           @AuthenticationPrincipal UserDetailsImpl auth,
@@ -52,6 +55,7 @@ public class ProjectsApplicationController {
         paService.saveProjectApplication(projectapplication);
     }
 
+    @Secured({"ROLE_FREELANCER"})
     @DeleteMapping("/{applicationId}")
     public ResponseEntity<String> deleteProjectApplication(@PathVariable Long applicationId){
 
@@ -64,6 +68,7 @@ public class ProjectsApplicationController {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PutMapping("/{applicationId}/accept")
     public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId) {
 

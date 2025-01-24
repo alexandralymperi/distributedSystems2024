@@ -41,12 +41,6 @@ public class MessagesController {
         return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    /*@PostMapping("")
-    public void createMessage(@RequestBody Messages message, @AuthenticationPrincipal UserDetailsImpl auth){
-        message.setSender(userService.getUser(auth.getId()).get());
-        mService.saveMessages(message);
-    }*/
-
     @PostMapping("/send/{recipientId}")
     public ResponseEntity<String> sendMessage(
             @PathVariable Long recipientId,
@@ -117,6 +111,17 @@ public class MessagesController {
                 .toList();
 
         return conversation;
+    }
+
+    @GetMapping("/received")
+    public List<Messages> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
+        Long loggedInUserId = auth.getId();
+
+        List<Messages> receivedMessages = mService.getMessages().stream()
+                .filter(msg -> msg.getReceiver().getId().equals(loggedInUserId))
+                .toList();
+
+        return receivedMessages;
     }
 
 }
