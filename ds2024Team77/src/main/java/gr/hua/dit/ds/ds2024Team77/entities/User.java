@@ -72,14 +72,6 @@ public class User {
             CascadeType.PERSIST, CascadeType.PERSIST})
     private List<Report> reportsMade;
 
-    @OneToMany(mappedBy = "reviewer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.PERSIST})
-    private List<Review> reviewsLeft;
-
-    @OneToMany(mappedBy = "reviewee", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.PERSIST})
-    private List<Review> reviewsConcerning;
-
     @OneToMany(mappedBy = "applicant", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
     private List<ProjectApplications> applications;
@@ -195,22 +187,6 @@ public class User {
 
     public void setReportsMade(List<Report> reportsMade) {
         this.reportsMade = reportsMade;
-    }
-
-    public List<Review> getReviewsLeft() {
-        return reviewsLeft;
-    }
-
-    public void setReviewsLeft(List<Review> reportsLeft) {
-        this.reviewsLeft = reviewsLeft;
-    }
-
-    public List<Review> getReviewsConcerning() {
-        return reviewsConcerning;
-    }
-
-    public void setReviewsConcerning(List<Review> reviewsConcerning) {
-        this.reviewsConcerning = reviewsConcerning;
     }
 
     public List<ProjectApplications> getApplications() {

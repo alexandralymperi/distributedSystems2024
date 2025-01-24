@@ -1,8 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.service;
 
-import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.entities.Report;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.repository.ReportRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
