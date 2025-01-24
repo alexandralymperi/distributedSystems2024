@@ -42,13 +42,6 @@ public class ReportController {
         return report.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-//    @GetMapping("/new")
-//    public String createReport(Model model) {
-//        Report report = new Report();
-//        model.addAttribute("report",report ); // Στο attributeName δεν ξέρω αν θέλει report ή Report
-//        return "report";
-//    }
-
     @PostMapping("")
     public void createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
         report.setReporter(userService.getUser(auth.getId()).get());
