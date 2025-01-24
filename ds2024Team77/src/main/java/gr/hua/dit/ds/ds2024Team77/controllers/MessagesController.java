@@ -1,6 +1,7 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 
+import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,31 @@ public class MessagesController {
         return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @PostMapping("")
+    /*@PostMapping("")
     public void createMessage(@RequestBody Messages message, @AuthenticationPrincipal UserDetailsImpl auth){
         message.setSender(userService.getUser(auth.getId()).get());
         mService.saveMessages(message);
+    }*/
+
+    @PostMapping("/send/{recipientId}")
+    public ResponseEntity<String> sendMessage(
+            @PathVariable Long recipientId,
+            @RequestBody Messages message,
+            @AuthenticationPrincipal UserDetailsImpl auth) {
+
+        Long senderId = auth.getId();
+
+        Optional<User> recipientOpt = userService.getUser(recipientId);
+        if (recipientOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recipient not found.");
+        }
+
+        message.setSender(userService.getUser(senderId).get());
+        message.setReceiver(recipientOpt.get());
+
+        mService.saveMessages(message);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Message sent successfully.");
     }
 
     @DeleteMapping("/{messageId}")
@@ -77,4 +99,24 @@ public class MessagesController {
         mRepository.save(message);
         return "messages";
     }
+
+    @GetMapping("/conversation/{userId}")
+    public List<Messages> getConversation(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserDetailsImpl auth) {
+        Long loggedInUserId = auth.getId();
+
+        List<Messages> allMessages = mService.getMessages();
+
+        List<Messages> conversation = allMessages.stream()
+                .filter(msg ->
+                        (msg.getSender().getId().equals(loggedInUserId) &&
+                                msg.getReceiver().getId().equals(userId)) ||
+                                (msg.getSender().getId().equals(userId) &&
+                                        msg.getReceiver().getId().equals(loggedInUserId)))
+                .toList();
+
+        return conversation;
+    }
+
 }

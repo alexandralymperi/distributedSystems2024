@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -17,10 +18,12 @@ public class Messages {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "sender_id")
+    @JsonIgnore
     private User sender;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "receiver_id")
+    @JsonIgnore
     private User receiver;
 
     @Column
@@ -38,7 +41,7 @@ public class Messages {
         this.sender = sender;
         this.receiver = receiver;
         this.contents = contents;
-        this.status = "Delivered";
+        this.status = "DELIVERED";
         this.date = date;
     }
 
