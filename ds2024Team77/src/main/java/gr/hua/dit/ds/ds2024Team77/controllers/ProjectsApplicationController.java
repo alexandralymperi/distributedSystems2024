@@ -20,15 +20,13 @@ import java.util.Optional;
 @RequestMapping("/ProjectApplication")
 public class ProjectsApplicationController {
 
-    private ProjectApplicationsRepository paRepository;
     private ProjectApplicationsService paService;
     private UserService userService;
 
     private ProjectService projectService;
 
-    public ProjectsApplicationController(ProjectApplicationsRepository paRepository, ProjectApplicationsService paService,
+    public ProjectsApplicationController(ProjectApplicationsService paService,
                                          UserService userService, ProjectService projectService) {
-        this.paRepository = paRepository;
         this.paService = paService;
         this.userService = userService;
         this.projectService = projectService;
@@ -46,17 +44,12 @@ public class ProjectsApplicationController {
     }
 
     @PostMapping("/{projectId}")
-    public void createProjectApplications(@RequestBody ProjectApplications projectapplication, @AuthenticationPrincipal UserDetailsImpl auth,
+    public void createProjectApplications(@RequestBody ProjectApplications projectapplication,
+                                          @AuthenticationPrincipal UserDetailsImpl auth,
                                           @PathVariable Long projectId){
         projectapplication.setApplicant(userService.getUser(auth.getId()).get());
         projectapplication.setProject(projectService.getProject(projectId).get());
         paService.saveProjectApplication(projectapplication);
-    }
-
-    @GetMapping("/delete")
-    public void deleteApplication(Long applicationId) {
-        ProjectApplications application = paRepository.findById(applicationId).get();
-        paRepository.delete(application);
     }
 
     @DeleteMapping("/{applicationId}")
@@ -71,8 +64,37 @@ public class ProjectsApplicationController {
 
     }
 
-    @GetMapping("/Date") ///????
-    public Date getApplicationDate(Date applicationDate) {
-        return applicationDate;
+    @PutMapping("/{applicationId}/accept")
+    public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId) {
+
+        Optional<ProjectApplications> optionalApplication = paService.getProjectApplication(applicationId);
+        if (optionalApplication.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
+        }
+
+        ProjectApplications application = optionalApplication.get();
+        var project = application.getProject();
+
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated project not found.");
+        }
+
+        project.setFreelancer(application.getApplicant());
+        project.setStatus("ONGOING");
+
+        projectService.saveProject(project);
+
+        List<ProjectApplications> allApplications = paService.getApplicationsByProject(project.getId());
+        for (ProjectApplications app : allApplications) {
+            if (!app.getId().equals(applicationId)) { ///!!!!
+                app.setStatus("REJECTED");
+                paService.saveProjectApplication(app);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted. Project is now ONGOING.");
     }
+
+
+
 }

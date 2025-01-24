@@ -46,21 +46,6 @@ public class MessagesController {
         mService.saveMessages(message);
     }
 
-//    @GetMapping("/new")
-//    public String newMessages(Model model){
-//        Messages message = new Messages();
-//        model.addAttribute("message",message ); // Στο attributeName δεν ξέρω αν θέλει report ή Report
-//        return "messages";
-//    }
-
-//    @PostMapping("/new")
-//    public void saveMessages(@PathVariable("/Messages") Messages messages, Model model){
-//        mService.saveMessages(messages);
-//        model.addAttribute("messages", mService.getMessages());
-//        model.addAttribute("successMessage", "Message added successfully!");
-//        mRepository.save(messages);
-//    }
-
     @DeleteMapping("/{messageId}")
     public ResponseEntity<String> deleteMessage(@PathVariable Long messageId){
 
@@ -73,7 +58,7 @@ public class MessagesController {
 
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/{messageId}/edit")
     public ResponseEntity<String> editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {
         Messages message = mRepository.findById(messageId).get();
 
@@ -83,12 +68,12 @@ public class MessagesController {
         return ResponseEntity.status(senderId).body("Edited");
     }
 
-    @GetMapping("/change")
+    @GetMapping("/{messageId}/change")
     public String changeMessageStatusToRead(@PathVariable Long messageId, Model model) {
         Messages message = mRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found with ID: " + messageId));
 
-        message.setStatus("READ"); // Υποθέτουμε ότι το status είναι String και η τιμή "READ" σημαίνει διαβασμένο.
+        message.setStatus("READ");
         mRepository.save(message);
         return "messages";
     }
