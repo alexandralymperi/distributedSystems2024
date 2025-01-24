@@ -8,8 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findProjectsByStatus(String status);
-    List<Project> findProjectsByFreelancer_Id(Long freelancerId);
-    List<Project> findProjectsByCustomer_Id(Long ownerId);
+    List<Project> findByStatus(String status);
+    List<Project> findByFreelancer_Id(Long freelancerId);
+    List<Project> findByCustomer_Id(Long ownerId);
     Optional<Project> findByTitle(String title);
 }
