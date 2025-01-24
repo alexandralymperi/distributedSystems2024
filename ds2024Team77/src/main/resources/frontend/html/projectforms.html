@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Approvals</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('images/main_index.jpg') no-repeat center center fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+           
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .homepage-btn {
+            position: absolute;
+            top: 20px;          
+            right: 20px;         
+        }
+    
+        .homepage-btn img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        .homepage-btn img:hover {
+            transform: scale(1.2); 
+        }
+
+        main {
+            padding: 150px;
+            text-align: center;
+        }
+
+        .section {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #000000e3;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #ff01bb;
+        }
+
+        .project-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .project-list li {
+            margin-bottom: 10px;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-list button {
+            background-color: #ff01bb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .project-list button:hover {
+            background-color: #eeb5d3;
+        }
+    </style>
+</head>
+<body>
+    
+    <main>
+
+        <div class="homepage-btn">
+            <a href="../html/index.html"><img src="images/homepage.png" alt="Profile Photo"></a>
+        </div>
+
+        <div class="section">
+            <h2>Pending Project Submissions</h2>
+            <ul class="project-list" id="project-approvals">
+                <!-- Project submissions will be dynamically added here -->
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        const projectSubmissions = [
+            { id: 1, title: "E-commerce Website", details: "A platform for online shopping." },
+            { id: 2, title: "Mobile App", details: "A fitness tracking application." },
+            { id: 3, title: "Portfolio Website", details: "Personal portfolio for a designer." },
+        ];
+
+        const projectList = document.getElementById("project-approvals");
+
+        function loadProjectSubmissions() {
+            projectList.innerHTML = "";
+            projectSubmissions.forEach((proj) => {
+                const li = document.createElement("li");
+                li.textContent = `${proj.title} - ${proj.details}`;
+
+                const approveButton = document.createElement("button");
+                approveButton.textContent = "Approve";
+                approveButton.onclick = () => handleAction(proj.id, "approved");
+
+                const rejectButton = document.createElement("button");
+                rejectButton.textContent = "Reject";
+                rejectButton.onclick = () => handleAction(proj.id, "rejected");
+
+                li.appendChild(approveButton);
+                li.appendChild(rejectButton);
+                projectList.appendChild(li);
+            });
+        }
+
+        function handleAction(id, action) {
+            const index = projectSubmissions.findIndex((proj) => proj.id === id);
+            if (index !== -1) {
+                alert(`Project ${action}: ${projectSubmissions[index].title}`);
+                projectSubmissions.splice(index, 1);
+                loadProjectSubmissions();
+            }
+        }
+
+        loadProjectSubmissions();
+    </script>
+</body>
+</html>
