@@ -1,14 +1,10 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 
-import gr.hua.dit.ds.ds2024Team77.entities.Report;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.repository.MessagesRepository;
 import gr.hua.dit.ds.ds2024Team77.service.MessagesService;
@@ -43,26 +39,13 @@ public class MessagesController {
         return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @PostMapping("")
-    public void createMessage(@RequestBody Messages message, @AuthenticationPrincipal UserDetailsImpl auth){
+    @PostMapping("/{userId}")
+    public void createMessage(@RequestBody Messages message, @AuthenticationPrincipal UserDetailsImpl auth,
+                              @PathVariable Long userId){
         message.setSender(userService.getUser(auth.getId()).get());
+        message.setReceiver(userService.getUser(userId).get());
         mService.saveMessages(message);
     }
-
-//    @GetMapping("/new")
-//    public String newMessages(Model model){
-//        Messages message = new Messages();
-//        model.addAttribute("message",message ); // Στο attributeName δεν ξέρω αν θέλει report ή Report
-//        return "messages";
-//    }
-
-//    @PostMapping("/new")
-//    public void saveMessages(@PathVariable("/Messages") Messages messages, Model model){
-//        mService.saveMessages(messages);
-//        model.addAttribute("messages", mService.getMessages());
-//        model.addAttribute("successMessage", "Message added successfully!");
-//        mRepository.save(messages);
-//    }
 
     @GetMapping("/edit")
     public String editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {

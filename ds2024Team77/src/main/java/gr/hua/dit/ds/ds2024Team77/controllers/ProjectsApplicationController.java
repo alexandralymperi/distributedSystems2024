@@ -1,15 +1,13 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
-import gr.hua.dit.ds.ds2024Team77.entities.Report;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
+import gr.hua.dit.ds.ds2024Team77.service.ProjectService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -26,10 +24,14 @@ public class ProjectsApplicationController {
     private ProjectApplicationsService paService;
     private UserService userService;
 
-    public ProjectsApplicationController(ProjectApplicationsRepository paRepository, ProjectApplicationsService paService, UserService userService) {
+    private ProjectService projectService;
+
+    public ProjectsApplicationController(ArrayList<ProjectApplications> paList, ProjectApplicationsRepository paRepository, ProjectApplicationsService paService, UserService userService, ProjectService projectService) {
+        this.paList = paList;
         this.paRepository = paRepository;
         this.paService = paService;
-        this.userService =userService;
+        this.userService = userService;
+        this.projectService = projectService;
     }
 
     @GetMapping("")
@@ -43,9 +45,11 @@ public class ProjectsApplicationController {
         return projectapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @PostMapping("")
-    public void createProjectApplications(@RequestBody ProjectApplications projectapplication, @AuthenticationPrincipal UserDetailsImpl auth){
+    @PostMapping("/{projectId}")
+    public void createProjectApplications(@RequestBody ProjectApplications projectapplication, @AuthenticationPrincipal UserDetailsImpl auth,
+                                          @PathVariable Long projectId){
         projectapplication.setApplicant(userService.getUser(auth.getId()).get());
+        projectapplication.setProject(projectService.getProject(projectId).get());
         paService.saveProjectApplication(projectapplication);
     }
 

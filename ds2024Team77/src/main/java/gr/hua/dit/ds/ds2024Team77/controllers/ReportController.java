@@ -1,15 +1,12 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
-import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.entities.Report;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.repository.ReportRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ReportService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
