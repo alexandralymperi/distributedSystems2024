@@ -1,15 +1,11 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
 
-import gr.hua.dit.ds.ds2024Team77.entities.Report;
-import gr.hua.dit.ds.ds2024Team77.entities.Review;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import gr.hua.dit.ds.ds2024Team77.entities.Messages;
 import gr.hua.dit.ds.ds2024Team77.repository.MessagesRepository;
 import gr.hua.dit.ds.ds2024Team77.service.MessagesService;
@@ -64,7 +60,6 @@ public class MessagesController {
 //        model.addAttribute("successMessage", "Message added successfully!");
 //        mRepository.save(messages);
 //    }
-
 
     @DeleteMapping("/{messageId}")
     public ResponseEntity<String> deleteMessage(@PathVariable Long messageId){

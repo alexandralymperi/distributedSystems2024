@@ -71,4 +71,19 @@ public class ProjectsController {
 
     }
 
+    @GetMapping("/active")
+    public List<Project> getActiveProjects() {
+        return pService.getActiveProjects();
+    }
+
+    @GetMapping("/customer")
+    public List<Project> getProjectsByCustomer(@AuthenticationPrincipal UserDetailsImpl auth) {
+        return pService.getProjectsBycCustomer(auth.getId());
+    }
+
+    @GetMapping("/freelancer")
+    public List<Project> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
+        return pService.getProjectsByFreelancer_Id(auth.getId());
+    }
+
 }

@@ -37,8 +37,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public List<Project> getProjectsByStatus(String status) {
-        return projectRepository.findProjectsByStatus(status);
+    public List<Project> getByStatus(String status) {
+        return projectRepository.findByStatus(status);
     }
 
     @Transactional
@@ -71,12 +71,15 @@ public class ProjectService {
 
     @Transactional
     public List<Project> getProjectsByFreelancer_Id(Long freelancerId) {
-        return projectRepository.findProjectsByFreelancer_Id(freelancerId);
+        return projectRepository.findByFreelancer_Id(freelancerId);
     }
 
     @Transactional
     public List<Project> getProjectsBycCustomer(Long customerId) {
-        return projectRepository.findProjectsByCustomer_Id(customerId);
+        return projectRepository.findByCustomer_Id(customerId);
     }
 
+    public List<Project> getActiveProjects() {
+        return projectRepository.findByStatus("ACTIVE");
+    }
 }
