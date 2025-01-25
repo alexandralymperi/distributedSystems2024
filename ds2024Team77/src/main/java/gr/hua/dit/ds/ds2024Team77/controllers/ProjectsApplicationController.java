@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
+import gr.hua.dit.ds.ds2024Team77.entities.Project;
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
@@ -12,10 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/ProjectApplication")
@@ -33,7 +31,7 @@ public class ProjectsApplicationController {
         this.projectService = projectService;
     }
 
-    @Secured({"ROLE_"})
+    @Secured({"ROLE_ADMIN"})
     @GetMapping("")
     public List<ProjectApplications> getProjectApplications(){
         return paService.getProjectApplications();
@@ -65,12 +63,15 @@ public class ProjectsApplicationController {
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application deletion unsuccessful.");
         }
-
     }
 
-    @Secured({"ROLE_ADMIN"})
+    @Secured({"ROLE_USER"})
     @PutMapping("/{applicationId}/accept")
     public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId) {
+
+        if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
+        }
 
         Optional<ProjectApplications> optionalApplication = paService.getProjectApplication(applicationId);
         if (optionalApplication.isEmpty()) {
@@ -100,6 +101,46 @@ public class ProjectsApplicationController {
         return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted. Project is now ONGOING.");
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/{projectId}/applications")
+    public ResponseEntity<List<ProjectApplications>> getApplicationsByProject(@PathVariable Long projectId,
+                                                                              @AuthenticationPrincipal UserDetailsImpl auth) {
+        try {
+            Optional<Project> project = projectService.getProject(projectId);
+            if (project.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+            }
+
+            if (!project.get().getCustomer().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
+            }
+
+            List<ProjectApplications> applications = paService.getApplicationsByProject(projectId);
+            return ResponseEntity.status(HttpStatus.OK).body(applications);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @Secured({"ROLE_CUSTOMER"})
+    @PutMapping("/{applicationId}/reject")
+    public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId, @AuthenticationPrincipal UserDetailsImpl auth) {
+        try {
+            ProjectApplications application = paService.getProjectApplication(applicationId);
+
+            if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to reject this application.");
+            }
+
+            paService.rejectApplication(applicationId);
+            return ResponseEntity.ok("Application rejected successfully.");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 
 
 }
