@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.web.servlet.function.ServerResponse.status;
+
 @RestController
 @RequestMapping("/FreelancerApplication")
 public class FreelancerApplicationController {
@@ -35,8 +37,16 @@ public class FreelancerApplicationController {
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{freelancerapplicationId}")
-    public ResponseEntity<FreelancerApplication> getFreelancerApplication(@PathVariable Long freelancerapplicationId){
+    public ResponseEntity<?> getFreelancerApplication(@PathVariable Long freelancerapplicationId,
+                                                                          @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<FreelancerApplication> freelancerapplication = freelancerApplicationService.getFreelancerApplication(freelancerapplicationId);
+
+        FreelancerApplication application = freelancerapplication.get();
+
+        if (!application.getApFreelancer().getId().equals(auth.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
+        }
+
         return freelancerapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 

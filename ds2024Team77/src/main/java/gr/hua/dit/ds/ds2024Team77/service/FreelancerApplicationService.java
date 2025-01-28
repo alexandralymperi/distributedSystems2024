@@ -6,6 +6,7 @@ import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
 import gr.hua.dit.ds.ds2024Team77.repository.FreelancerApplicationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class FreelancerApplicationService {
     }
 
     @Transactional
-    public boolean deleteApplication(Long applicationId) {
+    public boolean deleteApplication(@PathVariable Long applicationId) {
 
         Optional<FreelancerApplication> userOptional = this.freelancerApplicationRepository.findById(applicationId);
 
@@ -47,4 +48,10 @@ public class FreelancerApplicationService {
         }
 
     }
+
+
+
+
+
+
 }

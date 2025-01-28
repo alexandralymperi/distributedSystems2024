@@ -7,6 +7,7 @@ import gr.hua.dit.ds.ds2024Team77.repository.UserRepository;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class UserController {
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{user_id}/role/{role_id}")
     public ResponseEntity<String> deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
         Optional<User> existingUser = uService.getUser(user_id);
@@ -72,6 +73,7 @@ public class UserController {
         }
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/{user_id}/role/{role_id}") //Correct
     public ResponseEntity<String> addRoletoUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
         Optional<User> existingUser = uService.getUser(user_id);
@@ -99,6 +101,7 @@ public class UserController {
 
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean result = this.uService.deleteStudentById(userId);
@@ -108,12 +111,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User deletion unsuccessful.");
         }
     }
-
-    /*@GetMapping("/profile/{id}")
-    public String showProfile(@PathVariable Long id, Model model){
-        model.addAttribute("student", uService.getUser(id));
-        return "student/student-profile";
-    }*/
 
 }
 
