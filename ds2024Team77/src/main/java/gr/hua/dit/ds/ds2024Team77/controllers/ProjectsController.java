@@ -19,20 +19,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/projects")
 public class ProjectsController {
-
-    private ProjectRepository pRepository;
     private ProjectService pService;
-    private ProjectApplicationsRepository pARepository;
-    private ProjectApplicationsService pAService;
     private UserService userService;
 
-    public ProjectsController(ProjectRepository pRepository, ProjectService pService,
-                              ProjectApplicationsRepository pARepository,
-                              ProjectApplicationsService pAService, UserService userService) {
-        this.pRepository = pRepository;
+    public ProjectsController(ProjectService pService, UserService userService) {
         this.pService = pService;
-        this.pARepository = pARepository;
-        this.pAService = pAService;
         this.userService = userService;
     }
 

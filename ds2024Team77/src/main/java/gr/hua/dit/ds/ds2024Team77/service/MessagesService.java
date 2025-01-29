@@ -41,13 +41,13 @@ public class MessagesService {
         messagesRepository.save(message);
     }
 
-    @Transactional
-    public void editMessageContents(Long messageId, Integer senderId, String newContent) {
-        Messages message = messagesRepository.findById(messageId).get();
-
-        message.setContents(newContent);
-        messagesRepository.save(message);
-    }
+//    @Transactional
+//    public void editMessageContents(Long messageId, Integer senderId, String newContent) {
+//        Messages message = messagesRepository.findById(messageId).get();
+//
+//        message.setContents(newContent);
+//        messagesRepository.save(message);
+//    }
 
     @Transactional
     public boolean deleteMessageById(final Long messageId){

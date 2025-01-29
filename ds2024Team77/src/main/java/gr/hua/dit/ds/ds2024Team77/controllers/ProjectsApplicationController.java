@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
+import gr.hua.dit.ds.ds2024Team77.entities.FreelancerApplication;
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
 import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
@@ -37,9 +38,18 @@ public class ProjectsApplicationController {
         return paService.getProjectApplications();
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{projectapplicationId}")
-    public ResponseEntity<ProjectApplications> getProjectApplication(@PathVariable Long projectapplicationId){
+    public ResponseEntity<?> getProjectApplication(@PathVariable Long projectapplicationId,
+                                                   @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<ProjectApplications> projectapplication = paService.getProjectApplication(projectapplicationId);
+
+        ProjectApplications application = projectapplication.get();
+
+        if (!application.getApplicant().getId().equals(auth.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
+        }
+
         return projectapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
@@ -72,6 +82,12 @@ public class ProjectsApplicationController {
 
         Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
 
+        if (existingApplication == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated application not found.");
+        }
+
+        ProjectApplications application = existingApplication.get();
+
         if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
         }
@@ -81,7 +97,6 @@ public class ProjectsApplicationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
         }
 
-        ProjectApplications application = optionalApplication.get();
         var project = application.getProject();
 
         if (project == null) {
@@ -104,7 +119,7 @@ public class ProjectsApplicationController {
         return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted. Project is now ONGOING.");
     }
 
-    @Secured("ROLE_USER")
+    @Secured("ROLE_BASIC")
     @GetMapping("/{projectId}/applications")
     public ResponseEntity<List<ProjectApplications>> getApplicationsByProject(@PathVariable Long projectId,
                                                                               @AuthenticationPrincipal UserDetailsImpl auth) {
@@ -126,11 +141,17 @@ public class ProjectsApplicationController {
         }
     }
 
-    @Secured({"ROLE_CUSTOMER"})
+    @Secured({"ROLE_BASIC"})
     @PutMapping("/{applicationId}/reject")
     public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId, @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
-            ProjectApplications application = paService.getProjectApplication(applicationId);
+            Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
+
+            if (existingApplication == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated application not found.");
+            }
+
+            ProjectApplications application = existingApplication.get();
 
             if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to reject this application.");
