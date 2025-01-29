@@ -67,7 +67,10 @@ public class ProjectsApplicationController {
 
     @Secured({"ROLE_USER"})
     @PutMapping("/{applicationId}/accept")
-    public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId) {
+    public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId,
+                                                    @AuthenticationPrincipal UserDetailsImpl auth) {
+
+        Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
 
         if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
