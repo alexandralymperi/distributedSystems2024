@@ -143,7 +143,8 @@ public class ProjectsApplicationController {
 
     @Secured({"ROLE_BASIC"})
     @PutMapping("/{applicationId}/reject")
-    public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId, @AuthenticationPrincipal UserDetailsImpl auth) {
+    public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId,
+                                                    @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
             Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
 

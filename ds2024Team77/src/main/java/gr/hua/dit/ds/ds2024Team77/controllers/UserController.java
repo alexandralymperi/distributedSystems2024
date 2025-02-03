@@ -4,10 +4,12 @@ import gr.hua.dit.ds.ds2024Team77.entities.Role;
 import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.RoleRepository;
 import gr.hua.dit.ds.ds2024Team77.repository.UserRepository;
+import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,13 +37,24 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User '" + id + "' saved successfully!");
     }*/
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/users")
     public List<User> showUsers() {
         return this.uService.getUsers();
     }
 
+    //@Secured({"ROLE_ADMIN, ROLE_BASIC"})
     @GetMapping("/{user_id}")
-    public ResponseEntity<User> showUser(@PathVariable Long user_id) {
+    public ResponseEntity<User> showUser(@PathVariable Long user_id,
+                                         @AuthenticationPrincipal UserDetailsImpl auth) {
+
+        System.out.println("Requested user_id: " + user_id);
+        System.out.println("Authenticated user_id: " + auth.getId());
+
+        if (!user_id.equals(auth.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Optional<User> result = this.uService.getUser(user_id);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -101,7 +114,7 @@ public class UserController {
 
     }
 
-    @Secured("ROLE_ADMIN")
+    /*@Secured("ROLE_ADMIN")
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean result = this.uService.deleteStudentById(userId);
@@ -110,7 +123,7 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User deletion unsuccessful.");
         }
-    }
+    }*/
 
 }
 

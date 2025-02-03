@@ -4,7 +4,6 @@ import gr.hua.dit.ds.ds2024Team77.entities.Role;
 import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.RoleRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,8 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.LongFunction;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -63,7 +60,7 @@ public class UserService implements UserDetailsService {
         Optional<User> opt = userRepository.findByUsername(username);
 
         if(opt.isEmpty()){
-            throw new UsernameNotFoundException("User with email: " +username+" was not found.");
+            throw new UsernameNotFoundException("User with username: " +username+" was not found.");
         }else{
             return UserDetailsImpl.build(opt.get());
         }
@@ -81,14 +78,5 @@ public class UserService implements UserDetailsService {
         roleRepository.updateOrInsert(role);
     }
 
-    @Transactional
-    public boolean deleteStudentById(final Long userId){
-        final Optional<User> userOptional = this.userRepository.findById(userId);
-        if(userOptional.isEmpty()){
-            return false;
-        }
-        this.userRepository.deleteById(userId);
-        return true;
-    }
 
 }
