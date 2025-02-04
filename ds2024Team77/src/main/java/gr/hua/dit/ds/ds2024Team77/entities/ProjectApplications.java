@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,20 +13,24 @@ public class ProjectApplications {
     //Columns
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Integer Id;
 
     //Mappings
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnore
     private Project project;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User applicant;
 
     //More columns
     @Column
     @NotBlank
+    @JsonIgnore
     private String status;
 
     @Column

@@ -2,7 +2,11 @@ package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.FreelancerApplication;
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
+import gr.hua.dit.ds.ds2024Team77.entities.Role;
+import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.repository.FreelancerApplicationRepository;
+import gr.hua.dit.ds.ds2024Team77.repository.RoleRepository;
+import gr.hua.dit.ds.ds2024Team77.repository.UserRepository;
 import gr.hua.dit.ds.ds2024Team77.service.FreelancerApplicationService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
 import gr.hua.dit.ds.ds2024Team77.service.UserService;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
@@ -24,9 +29,17 @@ public class FreelancerApplicationController {
     private FreelancerApplicationService freelancerApplicationService;
     private UserService userService;
 
-    public FreelancerApplicationController(FreelancerApplicationService freelancerApplicationService, UserService userService) {
+    private RoleRepository roleRepository;
+
+    private UserRepository userRepository;
+
+    public FreelancerApplicationController(FreelancerApplicationService freelancerApplicationService,
+                                           UserService userService, RoleRepository roleRepository,
+                                           UserRepository userRepository) {
         this.freelancerApplicationService = freelancerApplicationService;
         this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @Secured({"ROLE_ADMIN"})
@@ -50,12 +63,13 @@ public class FreelancerApplicationController {
         return freelancerapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
+    @Secured("ROLE_BASIC")
     @PostMapping("/create")
     public ResponseEntity<String> createFreelancerApplication(@RequestBody FreelancerApplication freelancerapplication,
                                           @AuthenticationPrincipal UserDetailsImpl auth){
         try{
             freelancerapplication.setApFreelancer(userService.getUser(auth.getId()).get());
+            freelancerapplication.setStatus("PENDING");
             freelancerApplicationService.saveFreelancerApplication(freelancerapplication);
             return ResponseEntity.status(HttpStatus.CREATED).body("Freelancer application created successfully.");
         }catch (Exception e){
@@ -106,6 +120,16 @@ public class FreelancerApplicationController {
             application.setStatus("ACCEPTED");
 
             freelancerApplicationService.saveFreelancerApplication(application);
+
+            User freelancer = application.getApFreelancer();
+            Optional<Role> roleOptional = roleRepository.findByName("ROLE_FREELANCER");
+            System.out.println(roleOptional);
+
+            if(roleOptional.isPresent()){
+                Role roleFreelancer = roleOptional.get();
+                freelancer.setRoles(Set.of(roleFreelancer));
+                userService.saveUser(freelancer, true);
+            }
 
             return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted.");
         }catch (Exception e){

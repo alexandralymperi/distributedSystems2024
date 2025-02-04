@@ -1,9 +1,8 @@
 package gr.hua.dit.ds.ds2024Team77.controllers;
 
-import gr.hua.dit.ds.ds2024Team77.entities.FreelancerApplication;
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
-import gr.hua.dit.ds.ds2024Team77.repository.ProjectApplicationsRepository;
+import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -53,13 +53,20 @@ public class ProjectsApplicationController {
         return projectapplication.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_FREELANCER"})
+    @Secured("ROLE_FREELANCER")
     @PostMapping("/{projectId}")
-    public void createProjectApplications(@RequestBody ProjectApplications projectapplication,
-                                          @AuthenticationPrincipal UserDetailsImpl auth,
-                                          @PathVariable Long projectId){
+    public void createProjectApplication(@RequestBody ProjectApplications projectapplication,
+                                         @AuthenticationPrincipal UserDetailsImpl auth,
+                                         @PathVariable Long projectId){
+
+        Optional<Project> project = projectService.getProject(projectId);
+        if (!project.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found");
+        }
+        projectapplication.setProject(project.get());
         projectapplication.setApplicant(userService.getUser(auth.getId()).get());
         projectapplication.setProject(projectService.getProject(projectId).get());
+        projectapplication.setStatus("PENDING");
         paService.saveProjectApplication(projectapplication);
     }
 

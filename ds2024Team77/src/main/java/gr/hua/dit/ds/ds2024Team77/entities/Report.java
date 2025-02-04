@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,10 +14,12 @@ public class Report {
     //Columns
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long Id;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "reporter_id")
+    @JsonIgnore
     private User reporter;
 
     @Column
@@ -34,15 +37,14 @@ public class Report {
 
     @Column
     @NotBlank
+    @JsonIgnore
     private String status;
 
     //Constructors
-    public Report(User reporter, String title, String complaint, Date date, String status) {
-        this.reporter = reporter;
+    public Report(String title, String complaint, Date date) {
         this.title = title;
         this.complaint = complaint;
         this.date = date;
-        this.status = "PENDING";
     }
 
     public Report() {

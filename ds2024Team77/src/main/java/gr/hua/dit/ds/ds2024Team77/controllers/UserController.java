@@ -43,8 +43,8 @@ public class UserController {
         return this.uService.getUsers();
     }
 
-    //@Secured({"ROLE_ADMIN, ROLE_BASIC"})
-    @GetMapping("/{user_id}")
+
+    @GetMapping("/{user_id}") //correct
     public ResponseEntity<User> showUser(@PathVariable Long user_id,
                                          @AuthenticationPrincipal UserDetailsImpl auth) {
 
@@ -113,17 +113,6 @@ public class UserController {
         }
 
     }
-
-    /*@Secured("ROLE_ADMIN")
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-        boolean result = this.uService.deleteStudentById(userId);
-        if (result) {
-            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User deletion unsuccessful.");
-        }
-    }*/
 
 }
 

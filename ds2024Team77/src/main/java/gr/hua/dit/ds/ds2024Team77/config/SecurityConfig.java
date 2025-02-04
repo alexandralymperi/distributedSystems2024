@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 "/"
                         ).permitAll()
                         .requestMatchers("/projects/**").permitAll()
-                        .requestMatchers("/users/**").hasRole("BASIC")
+                        .requestMatchers("/report/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

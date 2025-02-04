@@ -14,6 +14,7 @@ public class Messages {
     //Columns
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Integer Id;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
@@ -31,6 +32,7 @@ public class Messages {
     private String contents;
 
     @Column
+    @JsonIgnore
     private String status;
 
     @Column

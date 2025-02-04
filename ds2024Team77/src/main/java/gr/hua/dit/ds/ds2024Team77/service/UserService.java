@@ -38,17 +38,27 @@ public class UserService implements UserDetailsService {
     public List<User> getUsers(){ return userRepository.findAll(); }
 
     @Transactional
-    public Long saveUser(User user){
+    public Long saveUser(User user, Boolean onApplication){
 
         String pswd = user.getPassword();
         String encodedPswd = passwordEncoder.encode(pswd);
         user.setPassword(encodedPswd);
 
-        Role role = roleRepository.findByName("BASIC_USER")
+        Role role = roleRepository.findByName("ROLE_BASIC")
                 .orElseThrow(() -> new RuntimeException("Error: Role not found."));
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(role);
+
+        if(onApplication){
+
+            Role freelancer = roleRepository.findByName("ROLE_FREELANCER")
+                    .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+
+            userRoles.add(freelancer);
+        }
+
         user.setRoles(userRoles);
+
 
         user = userRepository.save(user);
         return user.getId();

@@ -1,6 +1,7 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -10,10 +11,12 @@ public class FreelancerApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
+    @JsonIgnore
     private Long Id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User apFreelancer;
 
     @Column
@@ -21,6 +24,7 @@ public class FreelancerApplication {
 
     @Column
     @NotBlank
+    @JsonIgnore
     private String status;
 
     public FreelancerApplication(User apFreelancer, String description, String status) {

@@ -11,6 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,17 +34,17 @@ public class ReportController {
         return rService.getReports();
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
+    //@Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{reportId}")
     public ResponseEntity<Report> getReport(@PathVariable Long reportId){
         Optional<Report> report = rService.getReport(reportId);
         return report.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_BASIC"})
     @PostMapping("")
     public void createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
         report.setReporter(userService.getUser(auth.getId()).get());
+        report.setStatus("PENDING");
         rService.saveReport(report);
     }
 

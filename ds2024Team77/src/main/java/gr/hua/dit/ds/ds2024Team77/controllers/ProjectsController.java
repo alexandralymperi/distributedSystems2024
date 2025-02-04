@@ -27,14 +27,13 @@ public class ProjectsController {
         this.userService = userService;
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("")
     public List<Project> getProjects(){
         return pService.getProjects();
     }
 
-
-    @Secured({"ROLE_BASIC"})
-    @PostMapping("")
+    @PostMapping("")//CORRECT
     public void createProject(@RequestBody Project project,
                                  @AuthenticationPrincipal UserDetailsImpl auth){
 
@@ -43,44 +42,18 @@ public class ProjectsController {
         pService.saveProject(project);
     }
 
-    @Secured({"ROLE_BASIC"})
-    @GetMapping("/{projectId}")
+    @GetMapping("/{projectId}") //CORRECT
     public ResponseEntity<Project> getProject(@PathVariable Long projectId){
         Optional<Project> project = pService.getProject(projectId);
         return project.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_BASIC"})
-    @DeleteMapping("/{projectId}")
-    public ResponseEntity<String> deleteProject(@PathVariable Long projectId,
-                                                @AuthenticationPrincipal UserDetailsImpl auth){
-
-        Optional<Project> projectOptional = pService.getProject(projectId);
-
-        if (projectOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found.");
-        }
-
-        Project project = projectOptional.get();
-
-        if (!project.getCustomer().getId().equals(auth.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this project.");
-        }
-        boolean result = this.pService.deleteProjectById(projectId);
-        if(result){
-            return ResponseEntity.status(HttpStatus.OK).body("Project deleted successfully.");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project deletion unsuccessful.");
-        }
-
-    }
-
-    @GetMapping("/active")
+    @GetMapping("/active") //CORRECT
     public List<Project> getActiveProjects() {
         return pService.getActiveProjects();
     }
 
-    @GetMapping("/customer")
+    @GetMapping("/customer") //CORRECT
     public List<Project> getProjectsByCustomer(@AuthenticationPrincipal UserDetailsImpl auth) {
         return pService.getProjectsBycCustomer(auth.getId());
     }
@@ -91,7 +64,7 @@ public class ProjectsController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/{projectId}/approve")
+    @PutMapping("/{projectId}/approve") //CORRECT
     public ResponseEntity<String> approveProject(@PathVariable Long projectId) {
 
         try{
