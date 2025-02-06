@@ -32,77 +32,109 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
-    public List<User> showUsers() {
-        return this.uService.getUsers();
+    public ResponseEntity<?> showUsers() {
+
+        try {
+            List<User> users = this.uService.getUsers();
+            if (users.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No users found.");
+            }
+            return ResponseEntity.ok(users);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving users: " + e.getMessage());
+        }
     }
 
-
     @GetMapping("/{user_id}") //correct
-    public ResponseEntity<User> showUser(@PathVariable Long user_id,
+    public ResponseEntity<?> showUser(@PathVariable Long user_id,
                                          @AuthenticationPrincipal UserDetailsImpl auth) {
 
-        System.out.println("Requested user_id: " + user_id);
-        System.out.println("Authenticated user_id: " + auth.getId());
+        try {
+            System.out.println("Requested user_id: " + user_id);
+            System.out.println("Authenticated user_id: " + auth.getId());
 
-        if (!user_id.equals(auth.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!user_id.equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            Optional<User> result = this.uService.getUser(user_id);
+            return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+
         }
 
-        Optional<User> result = this.uService.getUser(user_id);
-        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{user_id}/role/{role_id}") //CORRECT
     public ResponseEntity<String> deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
-        Optional<User> existingUser = uService.getUser(user_id);
-        Optional<Role> existingRole = roleRepository.findById(role_id);
 
-        if (existingUser.isPresent() && existingRole.isPresent()) {
+        try {
 
-            User user = existingUser.get();
-            Role role = existingRole.get();
-            user.getRoles().remove(role);
-            uService.updateUser(user);
-            return ResponseEntity.ok("Role successfully removed from user.");
+            Optional<User> existingUser = uService.getUser(user_id);
+            Optional<Role> existingRole = roleRepository.findById(role_id);
 
-        } else {
+            if (existingUser.isPresent() && existingRole.isPresent()) {
 
-            if (existingUser.isEmpty() && existingRole.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User and Role not found.");
-            } else if (existingUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                User user = existingUser.get();
+                Role role = existingRole.get();
+                user.getRoles().remove(role);
+                uService.updateUser(user);
+                return ResponseEntity.ok("Role successfully removed from user.");
+
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found.");
+
+                if (existingUser.isEmpty() && existingRole.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User and Role not found.");
+                } else if (existingUser.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found.");
+                }
+
             }
 
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
         }
+
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/{user_id}/role/{role_id}") //Correct
     public ResponseEntity<String> addRoletoUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
-        Optional<User> existingUser = uService.getUser(user_id);
-        Optional<Role> existingRole = roleRepository.findById(role_id);
 
-        if (existingUser.isPresent() && existingRole.isPresent()) {
+        try {
 
-            User user = existingUser.get();
-            Role role = existingRole.get();
-            user.getRoles().add(role);
-            uService.updateUser(user);
-            return ResponseEntity.ok("Role successfully added to user.");
+            Optional<User> existingUser = uService.getUser(user_id);
+            Optional<Role> existingRole = roleRepository.findById(role_id);
 
-        } else {
+            if (existingUser.isPresent() && existingRole.isPresent()) {
 
-            if (existingUser.isEmpty() && existingRole.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User and Role not found.");
-            } else if (existingUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                User user = existingUser.get();
+                Role role = existingRole.get();
+                user.getRoles().add(role);
+                uService.updateUser(user);
+                return ResponseEntity.ok("Role successfully added to user.");
+
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found.");
+
+                if (existingUser.isEmpty() && existingRole.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User and Role not found.");
+                } else if (existingUser.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found.");
+                }
+
             }
 
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
         }
 
     }

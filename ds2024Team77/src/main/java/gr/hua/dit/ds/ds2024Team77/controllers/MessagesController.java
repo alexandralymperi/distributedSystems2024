@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,8 +33,20 @@ public class MessagesController {
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("")
-    public List<Messages> getMessages(){
-        return mService.getMessages();
+    public ResponseEntity<?> getMessages(){
+
+        try {
+            List<Messages> messages = mService.getMessages();
+
+            if (messages.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No messages found.");
+            }
+
+            return ResponseEntity.ok(messages);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"}) //?????
@@ -50,53 +63,84 @@ public class MessagesController {
             @RequestBody Messages message,
             @AuthenticationPrincipal UserDetailsImpl auth) {
 
-        Long senderId = auth.getId();
+        try{
+            Long senderId = auth.getId();
 
-        Optional<User> recipientOpt = userService.getUser(recipientId);
-        if (recipientOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recipient not found.");
+            Optional<User> recipientOpt = userService.getUser(recipientId);
+            if (recipientOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recipient not found.");
+            }
+
+            message.setSender(userService.getUser(senderId).get());
+            message.setReceiver(recipientOpt.get());
+
+            mService.saveMessages(message);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Message sent successfully.");
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
 
-        message.setSender(userService.getUser(senderId).get());
-        message.setReceiver(recipientOpt.get());
-
-        mService.saveMessages(message);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Message sent successfully.");
     }
 
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
     @GetMapping("/conversation/{userId}") //correct
-    public List<Messages> getConversation(
+    public ResponseEntity<?> getConversation(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserDetailsImpl auth) {
 
-        Long loggedInUserId = auth.getId();
+        try{
+            Long loggedInUserId = auth.getId();
 
-        List<Messages> allMessages = mService.getMessages();
+            List<Messages> allMessages = mService.getMessages();
 
-        List<Messages> conversation = allMessages.stream()
-                .filter(msg ->
-                        (msg.getSender().getId().equals(loggedInUserId) &&
-                                msg.getReceiver().getId().equals(userId)) ||
-                                (msg.getSender().getId().equals(userId) &&
-                                        msg.getReceiver().getId().equals(loggedInUserId)))
-                .toList();
+            List<Messages> conversation = allMessages.stream()
+                    .filter(msg ->
+                            (msg.getSender().getId().equals(loggedInUserId) &&
+                                    msg.getReceiver().getId().equals(userId)) ||
+                                    (msg.getSender().getId().equals(userId) &&
+                                            msg.getReceiver().getId().equals(loggedInUserId)))
+                    .toList();
 
-        return conversation;
+            if (conversation.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No conversation found with this user.");
+            }
+
+            return ResponseEntity.ok(conversation);
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request: Missing user details");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
     @GetMapping("/received") //correct
-    public List<Messages> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
+    public ResponseEntity<?> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
 
-        Long loggedInUserId = auth.getId();
 
-        List<Messages> receivedMessages = mService.getMessages().stream()
-                .filter(msg -> msg.getReceiver().getId().equals(loggedInUserId))
-                .toList();
+        try {
+            Long loggedInUserId = auth.getId();
 
-        return receivedMessages;
+            List<Messages> receivedMessages = mService.getMessages().stream()
+                    .filter(msg -> msg.getReceiver().getId().equals(loggedInUserId))
+                    .toList();
+
+            if (receivedMessages.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No received messages found.");
+            }
+
+            return ResponseEntity.ok(receivedMessages);
+
+        }catch (NullPointerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request: Missing user details.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
+
+
     }
 
 }

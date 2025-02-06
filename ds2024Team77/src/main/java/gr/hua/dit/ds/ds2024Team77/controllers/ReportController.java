@@ -30,34 +30,55 @@ public class ReportController {
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("")  //correct
-    public List<Report> getReports(){
-        return rService.getReports();
+    public ResponseEntity<List<Report>> getReports(){
+        try {
+            List<Report> reports = rService.getReports();
+            return ResponseEntity.ok(reports);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{reportId}") //correcct
     public ResponseEntity<?> getReport(@PathVariable Long reportId,
                                             @AuthenticationPrincipal UserDetailsImpl auth){
-        Optional<Report> optionalReport = rService.getReport(reportId);
 
-        if (optionalReport.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<Report> optionalReport = rService.getReport(reportId);
+
+            if (optionalReport.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Report report = optionalReport.get();
+
+            if (!report.getReporter().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("You are not authorized to view this report.");
+            }
+            return ResponseEntity.ok(report);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
         }
 
-        Report report = optionalReport.get();
-
-        if (!report.getReporter().getId().equals(auth.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("You are not authorized to view this report.");
-        }
-        return ResponseEntity.ok(report);
     }
 
     @PostMapping("") //correct
-    public void createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
-        report.setReporter(userService.getUser(auth.getId()).get());
-        report.setStatus("PENDING");
-        rService.saveReport(report);
+    public ResponseEntity<String> createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
+
+        try {
+            report.setReporter(userService.getUser(auth.getId()).get());
+            report.setStatus("PENDING");
+            rService.saveReport(report);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Report created successfully.");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
     }
 
     @Secured({"ROLE_BASIC"})
@@ -65,23 +86,28 @@ public class ReportController {
     public ResponseEntity<String> deleteReport(@PathVariable Long reportId,
                                                @AuthenticationPrincipal UserDetailsImpl auth){
 
-        Optional<Report> reportOptional = rService.getReport(reportId);
+        try {
+            Optional<Report> reportOptional = rService.getReport(reportId);
 
-        Report report = reportOptional.get();
+            Report report = reportOptional.get();
 
-        System.out.println(auth.getId());
-        System.out.println(report.getReporter().getId());
+            System.out.println(auth.getId());
+            System.out.println(report.getReporter().getId());
 
-        if (!report.getReporter().getId().equals(auth.getId())) {
-             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
-        }
+            if (!report.getReporter().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
+            }
 
-        boolean result = this.rService.deleteReportById(reportId);
+            boolean result = this.rService.deleteReportById(reportId);
 
-        if(result){
-            return ResponseEntity.status(HttpStatus.OK).body("Report deleted successfully.");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Report deletion unsuccessful.");
+            if(result){
+                return ResponseEntity.status(HttpStatus.OK).body("Report deleted successfully.");
+            }else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Report deletion unsuccessful.");
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+
         }
 
     }
