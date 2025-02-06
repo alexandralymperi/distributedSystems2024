@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/main_index.jpg') no-repeat center center fixed;
+    color: white;
+    margin: 0;
+    padding: 0;
+   
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.homepage-btn {
+    position: absolute;
+    top: 20px;          
+    right: 20px;         
+}
+
+.homepage-btn img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.homepage-btn img:hover {
+    transform: scale(1.2); 
+}
+
+main {
+    padding: 150px;
+    text-align: center;
+}
+
+.section {
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: #000000e3;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.section h2 {
+    margin-top: 0;
+    color: #ff01bb;
+}
+
+.freelancer-list {
+    list-style: none;
+    padding: 0;
+}
+
+.freelancer-list li {
+    margin-bottom: 10px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.freelancer-list button {
+    background-color: #ff01bb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.freelancer-list button:hover {
+    background-color: #eeb5d3;
+}
