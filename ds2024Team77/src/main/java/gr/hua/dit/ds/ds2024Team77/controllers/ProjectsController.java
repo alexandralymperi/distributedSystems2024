@@ -28,7 +28,7 @@ public class ProjectsController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("")
+    @GetMapping("") //CORRECT
     public List<Project> getProjects(){
         return pService.getProjects();
     }
@@ -58,7 +58,7 @@ public class ProjectsController {
         return pService.getProjectsBycCustomer(auth.getId());
     }
 
-    @GetMapping("/freelancer")
+    @GetMapping("/freelancer") //CORRECT
     public List<Project> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
         return pService.getProjectsByFreelancer_Id(auth.getId());
     }

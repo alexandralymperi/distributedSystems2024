@@ -42,14 +42,14 @@ public class FreelancerApplicationController {
         this.userRepository = userRepository;
     }
 
-    @Secured({"ROLE_ADMIN"})
-    @GetMapping("")
-    public List<FreelancerApplication> getFreelancerApplications(){
-        return freelancerApplicationService.getFreelancerApplications();
-    }
+//    @Secured({"ROLE_ADMIN"})
+//    @GetMapping("") //CORRECT
+//    public List<FreelancerApplication> getFreelancerApplications(){
+//        return freelancerApplicationService.getFreelancerApplications();
+//    }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
-    @GetMapping("/{freelancerapplicationId}")
+    @GetMapping("/{freelancerapplicationId}") //CORRECT
     public ResponseEntity<?> getFreelancerApplication(@PathVariable Long freelancerapplicationId,
                                                                           @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<FreelancerApplication> freelancerapplication = freelancerApplicationService.getFreelancerApplication(freelancerapplicationId);
@@ -64,7 +64,7 @@ public class FreelancerApplicationController {
     }
 
     @Secured("ROLE_BASIC")
-    @PostMapping("/create")
+    @PostMapping("/create") //CORRECT
     public ResponseEntity<String> createFreelancerApplication(@RequestBody FreelancerApplication freelancerapplication,
                                           @AuthenticationPrincipal UserDetailsImpl auth){
         try{
@@ -77,7 +77,7 @@ public class FreelancerApplicationController {
         }
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"}) //CORRECT
     @DeleteMapping("/{freelancerapplicationId}")
     public ResponseEntity<String> deleteFreelancerApplication(@PathVariable Long freelancerapplicationId,
                                                               @AuthenticationPrincipal UserDetailsImpl auth){
@@ -105,7 +105,7 @@ public class FreelancerApplicationController {
         }
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_ADMIN") //CORRECT
     @PutMapping("/{freelancerapplicationId}/accept")
     public ResponseEntity<String> acceptFreelancerApplication(@PathVariable Long freelancerapplicationId) {
 
@@ -125,11 +125,7 @@ public class FreelancerApplicationController {
             Optional<Role> roleOptional = roleRepository.findByName("ROLE_FREELANCER");
             System.out.println(roleOptional);
 
-            if(roleOptional.isPresent()){
-                Role roleFreelancer = roleOptional.get();
-                freelancer.setRoles(Set.of(roleFreelancer));
-                userService.saveUser(freelancer, true);
-            }
+            userService.saveUser(freelancer, true);
 
             return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted.");
         }catch (Exception e){

@@ -36,14 +36,14 @@ public class MessagesController {
         return mService.getMessages();
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"}) //?????
     @GetMapping("/{messageId}")
     public ResponseEntity<Messages> getMessage(@PathVariable Long messageId){
         Optional<Messages> message = mService.getMessage(messageId);
         return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_BASIC"})
+    @Secured({"ROLE_BASIC"}) //correct
     @PostMapping("/send/{recipientId}")
     public ResponseEntity<String> sendMessage(
             @PathVariable Long recipientId,
@@ -65,51 +65,8 @@ public class MessagesController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Message sent successfully.");
     }
 
-//    @Secured({"ROLE_BASIC"})
-//    @DeleteMapping("/{messageId}")
-//    public ResponseEntity<String> deleteMessage(@PathVariable Long messageId,
-//                                                @AuthenticationPrincipal UserDetailsImpl auth){
-//
-//        Optional<Messages> messageOptional = mService.getMessage(messageId);
-//
-//        boolean result = this.mService.deleteMessageById(messageId);
-//
-//        Messages message = messageOptional.get();
-//
-//        if (!message.getSender().getId().equals(auth.getId())) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this project.");
-//        }
-//        if(result){
-//            return ResponseEntity.status(HttpStatus.OK).body("Message deleted successfully.");
-//        }else{
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Message deletion unsuccessful.");
-//        }
-//
-//    }
-
-//    @GetMapping("/{messageId}/edit")
-//    public ResponseEntity<String> editMessageContents(@PathVariable Long messageId, Integer senderId, String newContent, Model model) {
-//        Messages message = mRepository.findById(messageId).get();
-//
-//        message.setContents(newContent);
-//        mRepository.save(message);
-//
-//        return ResponseEntity.status(senderId).body("Edited");
-//    }
-
-//    @Secured({"ROLE_BASIC","ROLE_ADMIN"})
-//    @GetMapping("/{messageId}/change")
-//    public String changeMessageStatusToRead(@PathVariable Long messageId, Model model) {
-//        Messages message = mRepository.findById(messageId)
-//                .orElseThrow(() -> new RuntimeException("Message not found with ID: " + messageId));
-//
-//        message.setStatus("READ");
-//        mRepository.save(message);
-//        return "messages";
-//    }
-
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
-    @GetMapping("/conversation/{userId}")
+    @GetMapping("/conversation/{userId}") //correct
     public List<Messages> getConversation(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserDetailsImpl auth) {
@@ -130,7 +87,7 @@ public class MessagesController {
     }
 
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
-    @GetMapping("/received")
+    @GetMapping("/received") //correct
     public List<Messages> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
 
         Long loggedInUserId = auth.getId();

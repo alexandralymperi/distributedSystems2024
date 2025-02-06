@@ -30,13 +30,6 @@ public class UserController {
         this.roleRepository = roleRepository;
     }
 
-
-    /*@PostMapping("/saveUser")
-    public ResponseEntity<String> saveUser(@RequestBody User user) {
-        Long id = uService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User '" + id + "' saved successfully!");
-    }*/
-
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
     public List<User> showUsers() {
@@ -60,7 +53,7 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{user_id}/role/{role_id}")
+    @DeleteMapping("/{user_id}/role/{role_id}") //CORRECT
     public ResponseEntity<String> deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
         Optional<User> existingUser = uService.getUser(user_id);
         Optional<Role> existingRole = roleRepository.findById(role_id);

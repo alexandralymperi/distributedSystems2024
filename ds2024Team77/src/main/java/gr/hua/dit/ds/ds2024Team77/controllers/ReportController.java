@@ -29,19 +29,31 @@ public class ReportController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("")
+    @GetMapping("")  //correct
     public List<Report> getReports(){
         return rService.getReports();
     }
 
-    //@Secured({"ROLE_ADMIN", "ROLE_BASIC"})
-    @GetMapping("/{reportId}")
-    public ResponseEntity<Report> getReport(@PathVariable Long reportId){
-        Optional<Report> report = rService.getReport(reportId);
-        return report.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
+    @GetMapping("/{reportId}") //correcct
+    public ResponseEntity<?> getReport(@PathVariable Long reportId,
+                                            @AuthenticationPrincipal UserDetailsImpl auth){
+        Optional<Report> optionalReport = rService.getReport(reportId);
+
+        if (optionalReport.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Report report = optionalReport.get();
+
+        if (!report.getReporter().getId().equals(auth.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You are not authorized to view this report.");
+        }
+        return ResponseEntity.ok(report);
     }
 
-    @PostMapping("")
+    @PostMapping("") //correct
     public void createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
         report.setReporter(userService.getUser(auth.getId()).get());
         report.setStatus("PENDING");
@@ -49,19 +61,22 @@ public class ReportController {
     }
 
     @Secured({"ROLE_BASIC"})
-    @DeleteMapping("/{reportId}")
+    @DeleteMapping("/{reportId}") //correct
     public ResponseEntity<String> deleteReport(@PathVariable Long reportId,
                                                @AuthenticationPrincipal UserDetailsImpl auth){
 
         Optional<Report> reportOptional = rService.getReport(reportId);
 
-        boolean result = this.rService.deleteReportById(reportId);
-
         Report report = reportOptional.get();
 
+        System.out.println(auth.getId());
+        System.out.println(report.getReporter().getId());
+
         if (!report.getReporter().getId().equals(auth.getId())) {
-             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this project.");
+             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
         }
+
+        boolean result = this.rService.deleteReportById(reportId);
 
         if(result){
             return ResponseEntity.status(HttpStatus.OK).body("Report deleted successfully.");

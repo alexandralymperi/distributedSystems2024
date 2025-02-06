@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+
+//TODO TRY CATCH OPOY DEN EXEI
 @RestController
 @RequestMapping("/ProjectApplication")
 public class ProjectsApplicationController {
@@ -33,13 +35,13 @@ public class ProjectsApplicationController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("")
+    @GetMapping("") //correct
     public List<ProjectApplications> getProjectApplications(){
         return paService.getProjectApplications();
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
-    @GetMapping("/{projectapplicationId}")
+    @Secured("ROLE_BASIC")
+    @GetMapping("/{projectapplicationId}") //correct
     public ResponseEntity<?> getProjectApplication(@PathVariable Long projectapplicationId,
                                                    @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<ProjectApplications> projectapplication = paService.getProjectApplication(projectapplicationId);
@@ -54,7 +56,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured("ROLE_FREELANCER")
-    @PostMapping("/{projectId}")
+    @PostMapping("/{projectId}") //correct
     public void createProjectApplication(@RequestBody ProjectApplications projectapplication,
                                          @AuthenticationPrincipal UserDetailsImpl auth,
                                          @PathVariable Long projectId){
@@ -82,52 +84,65 @@ public class ProjectsApplicationController {
         }
     }
 
-    @Secured({"ROLE_USER"})
-    @PutMapping("/{applicationId}/accept")
+    @PutMapping("/{applicationId}/accept") //CORRECT
     public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId,
                                                     @AuthenticationPrincipal UserDetailsImpl auth) {
 
-        Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
+        try{
 
-        if (existingApplication == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated application not found.");
-        }
+            Optional<ProjectApplications> existingApplication = paService.getProjectApplication(applicationId);
 
-        ProjectApplications application = existingApplication.get();
+            if (existingApplication.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated application not found.");
+            }
 
-        if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
-        }
+            ProjectApplications application = existingApplication.get();
 
-        Optional<ProjectApplications> optionalApplication = paService.getProjectApplication(applicationId);
-        if (optionalApplication.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
-        }
+            if (!application.getProject().getCustomer().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to evaluate this application.");
+            }
 
-        var project = application.getProject();
+            Optional<ProjectApplications> optionalApplication = paService.getProjectApplication(applicationId);
+            if (optionalApplication.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
+            }
 
-        if (project == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated project not found.");
-        }
+            var project = application.getProject();
 
-        project.setFreelancer(application.getApplicant());
-        project.setStatus("ONGOING");
+            if (project == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associated project not found.");
+            }
 
-        projectService.saveProject(project);
+            project.setFreelancer(application.getApplicant());
+            project.setStatus("ONGOING");
 
-        List<ProjectApplications> allApplications = paService.getApplicationsByProject(project.getId());
-        for (ProjectApplications app : allApplications) {
-            if (!app.getId().equals(applicationId)) { ///!!!!
+            projectService.saveProject(project);
+
+            List<ProjectApplications> allApplications = paService.getApplicationsByProject(project.getId());
+            for (ProjectApplications app : allApplications) {
                 app.setStatus("REJECTED");
                 paService.saveProjectApplication(app);
             }
+
+            application.setStatus("ACCEPTED");
+            paService.saveProjectApplication(application);
+
+
+            return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted. Project is now ONGOING.");
+
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
+
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted. Project is now ONGOING.");
     }
 
     @Secured("ROLE_BASIC")
-    @GetMapping("/{projectId}/applications")
+    @GetMapping("/{projectId}/applications") //correct
     public ResponseEntity<List<ProjectApplications>> getApplicationsByProject(@PathVariable Long projectId,
                                                                               @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
@@ -149,7 +164,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured({"ROLE_BASIC"})
-    @PutMapping("/{applicationId}/reject")
+    @PutMapping("/{applicationId}/reject") //correct
     public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId,
                                                     @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
