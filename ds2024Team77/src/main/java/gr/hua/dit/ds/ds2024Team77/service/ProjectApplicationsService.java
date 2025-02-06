@@ -86,6 +86,7 @@ public class ProjectApplicationsService {
 
     @Transactional
     public void rejectApplication(Long applicationId) {
+
         ProjectApplications application = projectApplicationsRepository.findById(applicationId).get();
         application.setStatus("REJECTED");
         projectApplicationsRepository.save(application);

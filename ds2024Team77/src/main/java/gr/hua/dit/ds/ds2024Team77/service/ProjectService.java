@@ -56,13 +56,6 @@ public class ProjectService {
     }
 
     @Transactional
-    public void changeProjectStatusToOngoing(Long id) {
-        Project project = projectRepository.findById(id).get();
-        project.setStatus("ONGOING");
-        projectRepository.save(project);
-    }
-
-    @Transactional
     public List<Project> getProjectsByFreelancer_Id(Long freelancerId) {
         return projectRepository.findByFreelancer_Id(freelancerId);
     }

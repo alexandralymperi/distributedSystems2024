@@ -35,16 +35,30 @@ public class ProjectsApplicationController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("") //correct
-    public List<ProjectApplications> getProjectApplications(){
-        return paService.getProjectApplications();
+    @GetMapping("") //CORRECT
+    public ResponseEntity<?> getProjectApplications(){
+
+        try {
+            List<ProjectApplications> projectApplications = paService.getProjectApplications();
+
+            if (projectApplications.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No project applications found.");
+            }
+            return ResponseEntity.ok(projectApplications);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
     @Secured("ROLE_BASIC")
-    @GetMapping("/{projectapplicationId}") //correct
+    @GetMapping("/{projectapplicationId}") //CORRECT
     public ResponseEntity<?> getProjectApplication(@PathVariable Long projectapplicationId,
                                                    @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<ProjectApplications> projectapplication = paService.getProjectApplication(projectapplicationId);
+
+        if (projectapplication.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project application not found.");
+        }
 
         ProjectApplications application = projectapplication.get();
 
@@ -56,32 +70,44 @@ public class ProjectsApplicationController {
     }
 
     @Secured("ROLE_FREELANCER")
-    @PostMapping("/{projectId}") //correct
-    public void createProjectApplication(@RequestBody ProjectApplications projectapplication,
+    @PostMapping("/{projectId}") //CORRECT
+    public ResponseEntity<String> createProjectApplication(@RequestBody ProjectApplications projectapplication,
                                          @AuthenticationPrincipal UserDetailsImpl auth,
                                          @PathVariable Long projectId){
+        try {
+            Optional<Project> project = projectService.getProject(projectId);
+            if (!project.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found");
+            }
+            projectapplication.setProject(project.get());
+            projectapplication.setApplicant(userService.getUser(auth.getId()).get());
+            projectapplication.setProject(projectService.getProject(projectId).get());
+            projectapplication.setStatus("PENDING");
+            paService.saveProjectApplication(projectapplication);
 
-        Optional<Project> project = projectService.getProject(projectId);
-        if (!project.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Application created successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
-        projectapplication.setProject(project.get());
-        projectapplication.setApplicant(userService.getUser(auth.getId()).get());
-        projectapplication.setProject(projectService.getProject(projectId).get());
-        projectapplication.setStatus("PENDING");
-        paService.saveProjectApplication(projectapplication);
+
+
     }
 
     @Secured({"ROLE_FREELANCER"})
     @DeleteMapping("/{applicationId}")
     public ResponseEntity<String> deleteProjectApplication(@PathVariable Long applicationId){
 
-        boolean result = this.paService.deleteApplication(applicationId);
-        if(result){
-            return ResponseEntity.status(HttpStatus.OK).body("Application deleted successfully.");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application deletion unsuccessful.");
+        try {
+            boolean result = this.paService.deleteApplication(applicationId);
+            if(result){
+                return ResponseEntity.status(HttpStatus.OK).body("Application deleted successfully.");
+            }else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application deletion unsuccessful.");
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
+
     }
 
     @PutMapping("/{applicationId}/accept") //CORRECT

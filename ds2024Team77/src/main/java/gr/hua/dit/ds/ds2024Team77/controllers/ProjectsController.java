@@ -29,17 +29,35 @@ public class ProjectsController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("") //CORRECT
-    public List<Project> getProjects(){
-        return pService.getProjects();
+    public ResponseEntity<?> getProjects(){
+
+        try{
+            List<Project> projects = pService.getProjects();
+
+            if (projects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No projects found.");
+            }
+
+            return ResponseEntity.ok(projects);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
     @PostMapping("")//CORRECT
-    public void createProject(@RequestBody Project project,
-                                 @AuthenticationPrincipal UserDetailsImpl auth){
+    public ResponseEntity<String> createProject(@RequestBody Project project,
+                                                @AuthenticationPrincipal UserDetailsImpl auth){
 
-        project.setStatus("PENDING_APPROVAL");
-        project.setCustomer(userService.getUser(auth.getId()).get());
-        pService.saveProject(project);
+        try {
+            project.setStatus("PENDING_APPROVAL");
+            project.setCustomer(userService.getUser(auth.getId()).get());
+            pService.saveProject(project);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Project created successfully.");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
     }
 
     @GetMapping("/{projectId}") //CORRECT
@@ -49,18 +67,53 @@ public class ProjectsController {
     }
 
     @GetMapping("/active") //CORRECT
-    public List<Project> getActiveProjects() {
-        return pService.getActiveProjects();
+    public ResponseEntity<?> getActiveProjects() {
+
+        try {
+            List<Project> activeProjects = pService.getActiveProjects();
+
+            if (activeProjects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No active projects found.");
+            }
+
+            return ResponseEntity.ok(activeProjects);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
     @GetMapping("/customer") //CORRECT
-    public List<Project> getProjectsByCustomer(@AuthenticationPrincipal UserDetailsImpl auth) {
-        return pService.getProjectsBycCustomer(auth.getId());
+    public ResponseEntity<?> getProjectsByCustomer(@AuthenticationPrincipal UserDetailsImpl auth) {
+
+        try {
+            List<Project> projects = pService.getProjectsBycCustomer(auth.getId());
+
+            if (projects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No projects found for the customer.");
+            }
+
+            return ResponseEntity.ok(projects);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
     }
 
     @GetMapping("/freelancer") //CORRECT
-    public List<Project> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
-        return pService.getProjectsByFreelancer_Id(auth.getId());
+    public ResponseEntity<?> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
+
+        try {
+            List<Project> projects = pService.getProjectsByFreelancer_Id(auth.getId());
+
+            if (projects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No projects found for the freelancer.");
+            }
+
+            return ResponseEntity.ok(projects);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+
     }
 
     @Secured("ROLE_ADMIN")

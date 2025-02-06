@@ -119,7 +119,6 @@ public class MessagesController {
     @GetMapping("/received") //correct
     public ResponseEntity<?> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
 
-
         try {
             Long loggedInUserId = auth.getId();
 
@@ -138,8 +137,6 @@ public class MessagesController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
-
-
 
     }
 
