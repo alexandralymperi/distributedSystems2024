@@ -3,103 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/freelancerforms.css">
     <title>Freelancer Approvals</title>
- 
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: url('images/main_index.jpg') no-repeat center center fixed;
-            color: white;
-            margin: 0;
-            padding: 0;
-           
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #000000;
-            color: #ffffff;
-        }
-
-        .homepage-btn {
-            position: absolute;
-            top: 20px;          
-            right: 20px;         
-        }
-    
-        .homepage-btn img {
-            width: 100px;
-            height: 100px;
-            cursor: pointer;
-            transition: transform 0.2s ease-in-out;
-        }
-    
-        .homepage-btn img:hover {
-            transform: scale(1.2); 
-        }
-
-        main {
-            padding: 150px;
-            text-align: center;
-        }
-
-        .section {
-            margin: 20px auto;
-            max-width: 800px;
-            background-color: #000000e3;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-        }
-
-        .section h2 {
-            margin-top: 0;
-            color: #ff01bb;
-        }
-
-        .freelancer-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .freelancer-list li {
-            margin-bottom: 10px;
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 5px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .freelancer-list button {
-            background-color: #ff01bb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-left: 10px;
-        }
-
-        .freelancer-list button:hover {
-            background-color: #eeb5d3;
-        }
-    </style>
 </head>
+
 <body>
 
     <main>
 
         <div class="homepage-btn">
-            <a href="../html/index.html"><img src="images/homepage.png" alt="Profile Photo"></a>
+            <a href="../html/index.html"><img src="../images/homepage1.jpg" alt="Profile Photo"></a>
         </div>
 
         <div class="section">
@@ -110,45 +23,6 @@
         </div>
     </main>
 
-    <script>
-        const freelancerApplications = [
-            { id: 1, name: "John Doe", skills: "Web Developer" },
-            { id: 2, name: "Jane Smith", skills: "Graphic Designer" },
-            { id: 3, name: "Alice Johnson", skills: "Data Scientist" },
-        ];
-
-        const freelancerList = document.getElementById("freelancer-approvals");
-
-        function loadFreelancerApplications() {
-            freelancerList.innerHTML = "";
-            freelancerApplications.forEach((app) => {
-                const li = document.createElement("li");
-                li.textContent = `${app.name} - Skills: ${app.skills}`;
-
-                const approveButton = document.createElement("button");
-                approveButton.textContent = "Approve";
-                approveButton.onclick = () => handleAction(app.id, "approved");
-
-                const rejectButton = document.createElement("button");
-                rejectButton.textContent = "Reject";
-                rejectButton.onclick = () => handleAction(app.id, "rejected");
-
-                li.appendChild(approveButton);
-                li.appendChild(rejectButton);
-                freelancerList.appendChild(li);
-            });
-        }
-
-        function handleAction(id, action) {
-            const index = freelancerApplications.findIndex((app) => app.id === id);
-            if (index !== -1) {
-                alert(`Freelancer ${action}: ${freelancerApplications[index].name}`);
-                freelancerApplications.splice(index, 1);
-                loadFreelancerApplications();
-            }
-        }
-
-        loadFreelancerApplications();
-    </script>
+    <script src="../javascript/freelancerforms.js"></script>
 </body>
 </html>

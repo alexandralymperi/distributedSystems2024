@@ -1,0 +1,100 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/main_index.jpg') no-repeat center center fixed;
+    color: rgb(255, 255, 255);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.homepage-btn {
+    position: absolute;
+    top: 20px;          
+    right: 20px;         
+}
+
+.homepage-btn img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.homepage-btn img:hover {
+    transform: scale(1.2); 
+}
+
+.login-container {
+    background: rgb(0, 0, 0);
+    padding: 30px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgb(0, 0, 0);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+form input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #88878a;
+    border-radius: 5px;
+}
+
+form button {
+    width: 50%;
+    padding: 10px;
+    background: #575656;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: padding 0.7s;
+
+}
+
+form button:focus {
+    background-color: #3b3a3a;
+}
+
+
+form button:hover {
+    background: #cfced2;
+    color: rgb(0, 0, 0);
+    width: 70%;
+    border-radius: 5px;
+    font-size: 20px;
+    box-shadow: 0px 5px 5px #888888;
+    padding:15px;
+    transition: padding 0.7s;
+}
+
+p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+p a {
+    color: #ff01bb;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
