@@ -1,0 +1,147 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/main_index.jpg') no-repeat center center fixed;
+    color: rgb(0, 0, 0);
+    margin: 0;
+    padding: 0;
+   
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+header .auth-button a,
+header .freelancerforms-btn a,
+header .projectforms-btn a,
+header .reports-btn a,
+header .freelancer-btn a {
+    color: #ffffff;
+    background-color: #ff01bb;
+    border: none;
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-size: 20px;
+    cursor: pointer;    
+    transition: padding 0.7s;
+    font-weight: bolder;
+}
+header .auth-button a:hover,
+header .freelancerforms-btn a:hover,
+header .projectforms-btn a:hover,
+header .reports-btn a:hover,
+header .freelancer-btn a:hover {
+    background: #eeb5d3;
+    border-radius: 50px;
+    padding: 10px 20px;
+    transition: padding 0.4s;
+}
+main {
+    padding: 20px;
+    text-align: center;
+    color: #000000;
+}
+
+main h1 {
+    font-size: 36px;
+    font-style: normal;
+    color: #ff01bb;
+    font-weight: bolder;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.529);
+    margin-bottom: 10px;
+}
+
+
+.profile-btn {
+    position: absolute;
+    top: 60px;          
+    right: 40px;         
+}
+
+.profile-btn img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-btn img:hover {
+    transform: scale(1.2); 
+}
+
+.projects {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 70px;
+    width: 70%;
+    height: 700px;
+    padding: 150px 350px;
+
+}
+.project-card {
+    background-color: #000000e3;
+    border: 1px solid #000000;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgb(0, 0, 0);
+    position: relative;
+    transition: 1s
+
+    
+}
+  
+.project-card:hover {
+    top: -10px;
+}
+
+.project-card h3 {
+    margin-top: 0;
+    color: #ff00bb;
+}
+.project-card p {
+    color: #ffffff;
+}
+
+button {
+    width: 50%;
+    padding: 10px;
+    background: #ff01bb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: padding 0.7s;
+    margin: 0 auto; 
+    display: block; 
+}
+
+button:focus {
+    background-color: #3b3a3a;
+}
+
+button:hover {
+    background: #cfced2;
+    color: rgb(0, 0, 0);
+    width: 60%;
+    border-radius: 5px;
+    font-size: 20px;
+    box-shadow: 0px 5px 5px #888888;
+    padding: 15px;
+    transition: padding 0.3s;
+}
+
+.success-message {
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ff01bb;
+    font-weight: bold;
+}
+

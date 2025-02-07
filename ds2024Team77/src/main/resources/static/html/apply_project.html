@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/apply_project.css">
+    <title>Apply for a New Project</title>
+</head>
+
+<body>
+
+    <div class="profile-btn">
+        <a href="../profile.html"><img src="../images/profile1.jpg" alt="Profile Photo"></a>
+    </div>
+
+    <div class="form-container">
+        <h1>Apply for a New Project</h1>
+        <form id="project-form">
+            <label for="project-title">Project Title:</label>
+            <input type="text" id="project-title" name="project-title" required>
+
+            <label for="project-description">Description:</label>
+            <textarea id="project-description" name="project-description" rows="5" required></textarea>
+
+            <button type="submit">Submit Project</button>
+        </form>
+
+        <div class="success-message" id="success-message">
+            Application Successful! 
+        </div>
+
+    </div>
+
+    <script src="../javascript/apply_project.js"></script>
+</body>
+
+</html>
