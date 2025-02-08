@@ -15,20 +15,34 @@ document.getElementById("login-form").addEventListener("submit", async function(
         if (response.ok) {
             const result = await response.json();
 
-            const isAdmin = result.token.role("ADMIN");
+            // Αποθήκευση του JWT token και του username στο localStorage
+            localStorage.setItem("token", result.accessToken);
+            localStorage.setItem("username", result.username);
+            localStorage.setItem("roles", JSON.stringify(result.roles));  // Αποθήκευση των roles
 
+            // Έλεγχος αν ο χρήστης είναι admin ή freelancer ή βασικός
+            if (result.roles.includes("ROLE_ADMIN")) {
+                alert("Login Successful as ADMIN!");
+                window.location.href = "../html/profile.html"; // Ανακατεύθυνση στην admin σελίδα
+            } else if (result.roles.includes("ROLE_FREELANCER")) {
+                alert("Login Successful as FREELANCER!");
+                window.location.href = "../html/profile.html"; // Ανακατεύθυνση στη σελίδα του freelancer
+            } else {
+                alert("Login Successful as BASIC user!");
+                window.location.href = "../html/profile.html"; // Ανακατεύθυνση σε απλό χρήστη
+            }
             alert(result.message);
             return;
 
         }else {
 
-            if (response === "404") {
+            if (response.status === 404) {
                 alert("User not found!");
                 window.location.href = "User not found!";
-            } else if (response === "403") {
+            } else if (response.status === 403) {
                 alert("You don't have authorization!");
                 window.location.href = "You don't have authorization!";
-            } else if (response === "500") {
+            } else if (response.status === 500) {
                 alert("Internal Server Error!");
                 window.location.href = "Internal Server Error!";
             }

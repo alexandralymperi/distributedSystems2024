@@ -3,13 +3,17 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
 const app = express();
-const PORT = 8080;
+const PORT = 7000;
 const SECRET_KEY = "your_secret_key";
 
 app.use(cors());
 app.use(express.json());
 
-let users = [
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+/*let users = [
     { id: 1, username: "admin", password: "admin123", role: "admin" },
     { id: 2, username: "freelancer1", password: "pass123", role: "freelancer" },
     { id: 3, username: "user1", password: "pass123", role: "user" }
@@ -61,8 +65,5 @@ app.post("/apply", (req, res) => {
 // **Admin: View Applications**
 app.get("/applications", (req, res) => {
     res.json(projects.map(p => ({ project: p.title, applications: p.applications })));
-});
+});*/
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});

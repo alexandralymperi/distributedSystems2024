@@ -22,9 +22,9 @@ document.getElementById("register-form").addEventListener("submit", async functi
         alert(result.message);
 
         if (response.ok) {
-            window.location.href = "login.html"; // Μεταφορά στο login μετά την εγγραφή
+            window.location.href = "../register.html"; // Μεταφορά στο login μετά την εγγραφή
         }else if(response === "404"){
-            window.location.href = "User not found!";
+            window.location.href = "User can't register!";
         }else if(response === "403"){
             window.location.href = "You don't have authorization!";
         }else if(response === "500"){

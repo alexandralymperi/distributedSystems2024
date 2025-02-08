@@ -53,11 +53,8 @@ public class AuthController {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        System.out.println("authentication: " + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("post authentication");
         String jwt = jwtUtils.generateJwtToken(authentication);
-        System.out.println("jwt: " + jwt);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()

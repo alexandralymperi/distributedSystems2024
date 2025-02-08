@@ -5,8 +5,23 @@ const newReportButton = document.getElementById("new-report");
 // Load reports for admin
 async function loadAllReports() {
     try {
-        const response = await fetch("http://localhost:8080/api/reports");
-        const reports = await response.json();
+        const response = await fetch("http://localhost:8080/report", {
+            method: "GET",
+            headers: { "Content-Type": "report.js"},
+            body: JSON.stringify({}),
+        });
+
+        if(response.ok){
+            const reports = await response.json();
+            alert(reports.message());
+            return;
+        }else {
+            if (response === "500") {
+                alert("Internal Server Error!");
+                window.location.href = "Internal Server Error!";
+            }
+        }
+
 
         allReportsList.innerHTML = "";
         reports.forEach((report) => {
@@ -30,11 +45,24 @@ newReportButton.addEventListener("click", async () => {
     const newReportText = prompt("Enter your new report:");
     if (newReportText) {
         try {
-            await fetch("http://localhost:8080/api/reports", {
+            const response = await fetch("http://localhost:8080/report", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: newReportText }),
             });
+
+            if(response.ok){
+                const result = await response.json();
+
+                alert(result.message);
+                return;
+            }else {
+                if (response === "500") {
+                    alert("Internal Server Error!");
+                    window.location.href = "Internal Server Error!";
+                }
+            }
+
             alert("Report submitted!");
             loadAllReports();
         } catch (error) {
@@ -46,7 +74,8 @@ newReportButton.addEventListener("click", async () => {
 // Resolve a report
 async function resolveReport(id) {
     try {
-        await fetch(`http://localhost:8080/api/reports/${id}`, { method: "DELETE" });
+        await fetch(`http://localhost:8080/report/{reportId}`, {
+            method: "DELETE" });
         alert("Report resolved!");
         loadAllReports();
     } catch (error) {

@@ -1,53 +1,64 @@
+// Λαμβάνουμε το token από το localStorage για να κάνουμε την αυθεντικοποίηση
+const token = localStorage.getItem("token");
 
-const username = "John Bla"; // *Δυναμικά από backend όταν υπάρχει σύστημα authentication*
-const isFreelancer = true; // *Αλλαγή σε false αν ο χρήστης δεν είναι freelancer*
-
+// Επιλέγουμε τα σημεία της σελίδας για να εμφανίσουμε τα δεδομένα
+const usernameDisplay = document.getElementById("username-display");
 const projectsContainer = document.querySelector(".projects");
 const workingOnContainer = document.querySelector(".working-on");
 
-
-// Load projects
-async function loadProjects() {
+// Ενέργεια για να φορτώσουμε τα δεδομένα του χρήστη
+async function loadUserData() {
     try {
-        const response = await fetch(`http://localhost:8080/api/projects/${username}`);
-        const projects = await response.json();
-
-        projectsContainer.innerHTML = "<h1>My Projects</h1>";
-        projects.forEach((proj) => {
-            const projectDiv = document.createElement("div");
-            projectDiv.classList.add("project-container");
-            projectDiv.innerHTML = `
-                <div class="project">
-                    <h2>${proj.title}</h2>
-                    <p>${proj.description}</p>
-                </div>`;
-            projectsContainer.appendChild(projectDiv);
+        // Εδώ παίρνουμε το user_id από το token
+        const response = await fetch(`http://localhost:8080/api/users/${getUserIdFromToken()}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         });
 
-        // Add button for new project
-        const addProjectButton = document.createElement("button");
-        addProjectButton.classList.add("add-project-btn");
-        addProjectButton.textContent = "Add New Project";
-        addProjectButton.onclick = () => window.location.href = '../html/apply_project.html';
-        projectsContainer.appendChild(addProjectButton);
+        if (response.ok) {
+            const user = await response.json();
+            usernameDisplay.textContent = `${user.firstName} ${user.lastName}`;  // Εμφανίζουμε το όνομα και επώνυμο του χρήστη
+            checkUserRole(user.roles);  // Έλεγχος αν έχει τον ρόλο του freelancer
+        } else {
+            alert("Failed to load user data.");
+        }
     } catch (error) {
-        console.error("Error loading projects:", error);
+        console.error("Error loading user data:", error);
     }
 }
 
-// Load "Working On" projects
-async function loadWorkingOn() {
-    if (!isFreelancer) {
-        workingOnContainer.style.display = "none";
-        return;
-    }
+// Ενέργεια για να πάρουμε το user_id από το JWT token (αν χρησιμοποιούμε JWT)
+function getUserIdFromToken() {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) return null;
 
+    const payload = JSON.parse(atob(jwt.split('.')[1]));
+    return payload.id;  // Επιστρέφει το id του χρήστη από το token
+}
+
+// Έλεγχος αν ο χρήστης έχει τον ρόλο "freelancer"
+function checkUserRole(roles) {
+    if (roles.includes("ROLE_FREELANCER")) {
+        loadWorkingOn();  // Αν ο χρήστης έχει τον ρόλο freelancer, φορτώνουμε τα έργα που εργάζεται
+        workingOnContainer.style.display = "block";  // Εμφάνιση του τμήματος "Working On..."
+    } else {
+        workingOnContainer.style.display = "none";  // Κρύβουμε το τμήμα αν δεν είναι freelancer
+    }
+}
+
+// Φόρτωση έργων που εργάζεται ο χρήστης (working on projects)
+async function loadWorkingOn() {
     try {
-        const response = await fetch(`http://localhost:8080/api/working-on/${username}`);
+        const response = await fetch(`http://localhost:8080/api/projects/freelancer`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
         const projects = await response.json();
 
         workingOnContainer.innerHTML = "<h1>Working On...</h1>";
-        projects.forEach((proj) => {
+        projects.forEach(proj => {
             const projectDiv = document.createElement("div");
             projectDiv.classList.add("project-container");
             projectDiv.innerHTML = `
@@ -62,7 +73,5 @@ async function loadWorkingOn() {
     }
 }
 
-// Load user data
-loadProjects();
-loadWorkingOn();
-
+// Κλήση για να φορτώσουμε τα δεδομένα του χρήστη
+loadUserData();

@@ -29,7 +29,8 @@
 // Approve freelancer
 async function handleApproval(id) {
     try {
-        await fetch(`http://localhost:8080/api/freelancers/approve/${id}`, { method: "PUT" });
+        await fetch(`http://localhost:8080/api/freelancers/approve/${id}`, {
+            method: "PUT" });
         alert("Freelancer approved!");
         loadFreelancerApplications();
     } catch (error) {
