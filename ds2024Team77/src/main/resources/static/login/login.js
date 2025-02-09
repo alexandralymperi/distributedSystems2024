@@ -4,7 +4,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-
+    try{
         const response = await fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -52,8 +52,8 @@ document.getElementById("login-form").addEventListener("submit", async function(
         localStorage.setItem("username", result.username); // Αποθήκευση ονόματος χρήστη
         window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στο προφίλ
 
-    // } catch (error) {
-    //     console.error("Login error:", error);
-    //     alert("Error logging in. Please try again.");
-    // }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Error logging in. Please try again.");
+    }
 });

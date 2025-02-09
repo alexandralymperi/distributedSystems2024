@@ -1,5 +1,6 @@
 const form = document.getElementById('freelancer-form');
 const successMessage = document.getElementById('success-message');
+const errorMessage = document.getElementById('error-message');
 
 form.addEventListener('submit', async function(event) {
     event.preventDefault(); // Αποφυγή της αυτόματης υποβολής της φόρμας
@@ -22,24 +23,25 @@ form.addEventListener('submit', async function(event) {
         // Έλεγχος της απάντησης από τον server
         if (response.ok) {
             successMessage.textContent = 'Application Successful!';
-            successMessage.style.color = 'green';
             successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
             form.reset(); // Καθαρισμός φόρμας
         } else {
             const errorData = await response.json();
-            successMessage.textContent = `Error: ${errorData.message}`;
-            successMessage.style.color = 'red';
-            successMessage.style.display = 'block';
+            errorMessage.textContent = `Error: ${errorData.message}`;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
         }
     } catch (error) {
         // Αν προκύψει πρόβλημα στο δίκτυο ή άλλο σφάλμα
-        successMessage.textContent = 'Something went wrong. Please try again later.';
-        successMessage.style.color = 'red';
-        successMessage.style.display = 'block';
+        errorMessage.textContent = 'Something went wrong. Please try again later.';
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
     }
 
     // Απόκρυψη μηνύματος μετά από 5 δευτερόλεπτα
     setTimeout(() => {
         successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
     }, 5000);
 });
