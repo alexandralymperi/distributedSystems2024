@@ -1,11 +1,10 @@
-
 document.getElementById("login-form").addEventListener("submit", async function(event) {
     event.preventDefault(); // Αποτρέπει την αυτόματη ανανέωση της σελίδας
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    try {
+
         const response = await fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -23,13 +22,13 @@ document.getElementById("login-form").addEventListener("submit", async function(
             // Έλεγχος αν ο χρήστης είναι admin ή freelancer ή βασικός
             if (result.roles.includes("ROLE_ADMIN")) {
                 alert("Login Successful as ADMIN!");
-                window.location.href = "../html/profile.html"; // Ανακατεύθυνση στην admin σελίδα
+                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στην admin σελίδα
             } else if (result.roles.includes("ROLE_FREELANCER")) {
                 alert("Login Successful as FREELANCER!");
-                window.location.href = "../html/profile.html"; // Ανακατεύθυνση στη σελίδα του freelancer
+                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στη σελίδα του freelancer
             } else {
                 alert("Login Successful as BASIC user!");
-                window.location.href = "../html/profile.html"; // Ανακατεύθυνση σε απλό χρήστη
+                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση σε απλό χρήστη
             }
             alert(result.message);
             return;
@@ -51,23 +50,10 @@ document.getElementById("login-form").addEventListener("submit", async function(
         alert("Login Successful!");
         localStorage.setItem("token", result.token); // Αποθήκευση JWT token
         localStorage.setItem("username", result.username); // Αποθήκευση ονόματος χρήστη
-        window.location.href = "../profile.html"; // Ανακατεύθυνση στο προφίλ
+        window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στο προφίλ
 
-        if (result.roles.includes("ADMIN")) {
-            alert("Login Successful as ADMIN!");
-            window.location.href = "profile.html"; // Ανακατεύθυνση σε admin σελίδα
-        } else if(result.roles.includes("FREELANCER")){
-            alert("Login Successful!");
-            window.location.href = "profile.html"; // Ανακατεύθυνση στο προφίλ
-        } else { //if(result.roles.includes("BaASIC"))
-            alert("Login Successful!");
-            window.location.href = "profile.html"; // Ανακατεύθυνση στο προφίλ
-        }
-
-    } catch (error) {
-        console.error("Login error:", error);
-        alert("Error logging in. Please try again.");
-    }
+    // } catch (error) {
+    //     console.error("Login error:", error);
+    //     alert("Error logging in. Please try again.");
+    // }
 });
-            
-  
