@@ -79,39 +79,78 @@ function fetchProjects() {
 }
 
 // **Συνάρτηση εμφάνισης των έργων στις κάρτες**
+// **Συνάρτηση εμφάνισης των έργων στις κάρτες**
 function displayProjects(projects) {
     const projectContainer = document.querySelector(".projects");
-    projectContainer.innerHTML = ""; // Clear previous content
+    projectContainer.innerHTML = ""; // Καθαρισμός προηγούμενων δεδομένων
 
-    // Ελέγχουμε αν υπάρχουν ενεργά έργα
+    // Έλεγχος αν υπάρχουν ενεργά έργα
     if (projects.length === 0) {
         projectContainer.innerHTML = "<p>No active projects found.</p>";
         return;
     }
 
-    // Δημιουργούμε τις κάρτες για κάθε έργο
+    // Δημιουργία καρτών έργων
     projects.forEach(project => {
-        const projectCard = document.createElement('div');
-        projectCard.classList.add('project-card');
+        const projectCard = document.createElement("div");
+        projectCard.classList.add("project-card");
         projectCard.innerHTML = `
             <h3>${project.title}</h3>
-            <p>Location: ${project.location}</p>
             <p>${project.description}</p>
+            <p><strong>Pay:</strong> $${project.pay}</p>
             <button type="submit">Apply Now</button>
             <div class="success-message">Applied Successfully!</div>
         `;
         projectContainer.appendChild(projectCard);
     });
 
-    // Εφαρμογή για freelancers μόνο
+    document.querySelectorAll(".apply-button").forEach(button => {
+        button.addEventListener("click", () => applyForProject(button.dataset.projectId));
+    });
+    // Απόκρυψη κουμπιού Apply Now για μη freelancers
     handleProjectApplications(localStorage.getItem("role"));
 }
 
+
 // **Διαχείριση Apply Now για freelancers**
 function handleProjectApplications(role) {
-    document.querySelectorAll('.project-card form button').forEach(button => {
+    document.querySelectorAll('.apply-button').forEach(button => {
         if (role !== "freelancer") {
             button.style.display = "none"; // Απόκρυψη κουμπιού Apply Now για μη freelancers
         }
     });
+
+    // **Συνάρτηση αποστολής αίτησης (POST request)**
+    function applyForProject(projectId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("You must be logged in to apply for projects.");
+            return;
+        }
+
+        fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Ενημερωμένο path
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                status: "PENDING"
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to apply for project.");
+                }
+                return response.text();
+            })
+            .then(message => {
+                alert(message);
+                document.querySelector(`button[data-project-id="${projectId}"]`).nextElementSibling.style.display = "block";
+            })
+            .catch(error => {
+                alert("Error: " + error.message);
+            });
+    }
+
 }
