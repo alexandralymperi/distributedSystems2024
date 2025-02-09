@@ -1,12 +1,11 @@
-
 body {
     font-family: Arial, sans-serif;
     background: url('images/main_index.jpg') no-repeat center center fixed;
     color: rgb(0, 0, 0);
     margin: 0;
     padding: 0;
-   
 }
+
 header {
     display: flex;
     justify-content: space-between;
@@ -27,10 +26,11 @@ header .freelancer-btn a {
     border-radius: 40px;
     padding: 5px 10px;
     font-size: 20px;
-    cursor: pointer;    
+    cursor: pointer;
     transition: padding 0.7s;
     font-weight: bolder;
 }
+
 header .auth-button a:hover,
 header .freelancerforms-btn a:hover,
 header .projectforms-btn a:hover,
@@ -41,8 +41,9 @@ header .freelancer-btn a:hover {
     padding: 10px 20px;
     transition: padding 0.4s;
 }
+
 main {
-    padding: 20px;
+    padding: 60px 20px; /* Added padding at the top and bottom */
     text-align: center;
     color: #000000;
 }
@@ -54,14 +55,13 @@ main h1 {
     font-weight: bolder;
     text-transform: uppercase;
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.529);
-    margin-bottom: 10px;
+    margin-bottom: 40px; /* Increased margin at the bottom */
 }
-
 
 .profile-btn {
     position: absolute;
-    top: 60px;          
-    right: 40px;         
+    top: 60px;
+    right: 40px;
 }
 
 .profile-btn img {
@@ -72,18 +72,19 @@ main h1 {
 }
 
 .profile-btn img:hover {
-    transform: scale(1.2); 
+    transform: scale(1.2);
 }
 
 .projects {
-    display:grid;
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 70px;
-    width: 70%;
-    height: 700px;
-    padding: 150px 350px;
-
+    gap: 30px; /* Reduced gap between cards */
+    width: 90%; /* Set width to 90% */
+    max-width: 1200px; /* Set maximum width */
+    margin: 0 auto; /* Center content */
+    padding: 50px 0; /* Added padding for better spacing */
 }
+
 .project-card {
     background-color: #000000e3;
     border: 1px solid #000000;
@@ -91,11 +92,9 @@ main h1 {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgb(0, 0, 0);
     position: relative;
-    transition: 1s
-
-    
+    transition: 1s;
 }
-  
+
 .project-card:hover {
     top: -10px;
 }
@@ -104,6 +103,7 @@ main h1 {
     margin-top: 0;
     color: #ff00bb;
 }
+
 .project-card p {
     color: #ffffff;
 }
@@ -118,8 +118,8 @@ button {
     font-size: 20px;
     cursor: pointer;
     transition: padding 0.7s;
-    margin: 0 auto; 
-    display: block; 
+    margin: 0 auto;
+    display: block;
 }
 
 button:focus {
@@ -144,4 +144,3 @@ button:hover {
     color: #ff01bb;
     font-weight: bold;
 }
-

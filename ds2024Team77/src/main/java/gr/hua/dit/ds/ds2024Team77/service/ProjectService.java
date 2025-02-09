@@ -67,7 +67,7 @@ public class ProjectService {
 
     @Transactional
     public List<Project> getActiveProjects() {
-        return projectRepository.findByStatus("ACTIVE");
+        return projectRepository.findByStatus("ONGOING");
     }
 
 

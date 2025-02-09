@@ -22,15 +22,12 @@ document.getElementById("login-form").addEventListener("submit", async function(
             // Έλεγχος αν ο χρήστης είναι admin ή freelancer ή βασικός
             if (result.roles.includes("ROLE_ADMIN")) {
                 alert("Login Successful as ADMIN!");
-                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στην admin σελίδα
             } else if (result.roles.includes("ROLE_FREELANCER")) {
                 alert("Login Successful as FREELANCER!");
-                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στη σελίδα του freelancer
             } else {
                 alert("Login Successful as BASIC user!");
-                window.location.href = "/profile/profile.html"; // Ανακατεύθυνση σε απλό χρήστη
             }
-            alert(result.message);
+            window.location.href = "/index.html"; // Ανακατεύθυνση σε απλό χρήστη
             return;
 
         }else {
@@ -46,11 +43,6 @@ document.getElementById("login-form").addEventListener("submit", async function(
                 window.location.href = "Internal Server Error!";
             }
         }
-
-        alert("Login Successful!");
-        localStorage.setItem("token", result.token); // Αποθήκευση JWT token
-        localStorage.setItem("username", result.username); // Αποθήκευση ονόματος χρήστη
-        window.location.href = "/profile/profile.html"; // Ανακατεύθυνση στο προφίλ
 
     } catch (error) {
         console.error("Login error:", error);

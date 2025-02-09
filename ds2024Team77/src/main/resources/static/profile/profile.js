@@ -25,7 +25,7 @@ async function loadUserData() {
 
     if (!token || !userId) {
         alert("You are not authenticated. Please log in.");
-        window.location.href = "..c/login/login.html"; // Ανακατεύθυνση στην σελίδα login
+        window.location.href = "/login/login.html"; // Ανακατεύθυνση στην σελίδα login
         return;
     }
 
