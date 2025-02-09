@@ -50,8 +50,12 @@ async function loadFreelancerApplications() {
 // Approve freelancer
 async function handleApproval(id) {
     try {
-        await fetch(`http://localhost:8080/FreelancerApplication/${id}/approve`, {
-            method: "PUT" });
+        await fetch(`http://localhost:8080/FreelancerApplication/accept/${id}`, {
+            method: "PUT", 
+            headers: {
+                'Authorization': `Bearer ${JWTtoken}`
+            }}, 
+        );
         alert("Freelancer approved!");
         loadFreelancerApplications();
     } catch (error) {
@@ -62,7 +66,11 @@ async function handleApproval(id) {
 // Reject freelancer
 async function handleRejection(id) {
     try {
-        await fetch(`http://localhost:8080/FreelancerApplication/${id}`, { method: "DELETE" });
+        await fetch(`http://localhost:8080/FreelancerApplication/${id}`, { method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${JWTtoken}`
+            }}, 
+         );
         alert("Freelancer rejected!");
         loadFreelancerApplications();
     } catch (error) {

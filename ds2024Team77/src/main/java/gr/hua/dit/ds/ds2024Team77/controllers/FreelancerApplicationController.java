@@ -104,7 +104,9 @@ public class FreelancerApplicationController {
 
             FreelancerApplication application = optionalApplication.get();
 
-            if (application.getApFreelancer().getId().equals(auth.getId())) {
+            if (application.getApFreelancer().getId().equals(auth.getId()) ||
+                    auth.getAuthorities().stream()
+                            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
                 boolean result = this.freelancerApplicationService.deleteApplication(freelancerapplicationId);
                 if (result) {
                     return ResponseEntity.status(HttpStatus.OK).body("Application with ID " + freelancerapplicationId + " deleted successfully.");
@@ -120,7 +122,7 @@ public class FreelancerApplicationController {
     }
 
     @Secured("ROLE_ADMIN") //CORRECT
-    @PutMapping("/{freelancerapplicationId}/accept")
+    @PutMapping("/accept/{freelancerapplicationId}")
     public ResponseEntity<String> acceptFreelancerApplication(@PathVariable Long freelancerapplicationId) {
 
         try{
@@ -140,35 +142,12 @@ public class FreelancerApplicationController {
             System.out.println(roleOptional);
 
             userService.saveUser(freelancer, true);
-
+            System.out.println(application);
             return ResponseEntity.status(HttpStatus.OK).body("Freelancer application accepted.");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error accepting freelancer application: " + e.getMessage());
         }
 
     }
-
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/{freelancerapplicationId}/reject")
-    public ResponseEntity<String> rejectFreelancerApplication(@PathVariable Long freelancerapplicationId) {
-
-        try{
-            Optional<FreelancerApplication> optionalFreelancerApplication = freelancerApplicationService.getFreelancerApplication(freelancerapplicationId);
-            if (optionalFreelancerApplication.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Application not found.");
-            }
-
-            FreelancerApplication application = optionalFreelancerApplication.get();
-
-            application.setStatus("REJECTED");
-
-            freelancerApplicationService.saveFreelancerApplication(application);
-
-            return ResponseEntity.status(HttpStatus.OK).body("Freelancer application rejected.");
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error rejecting freelancer application: " + e.getMessage());
-        }
-
-    }
-
+    
 }
