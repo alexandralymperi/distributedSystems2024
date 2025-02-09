@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Ανάκτηση δεδομένων χρήστη από localStorage (αν υπάρχει)
     const token = localStorage.getItem("token"); // Ελέγχει αν υπάρχει login
-    const role = localStorage.getItem("role"); // "admin", "freelancer", "user"
+    const roles = localStorage.getItem("roles"); 
+    const rolesArray = JSON.parse(roles);
 
-    toggleButtonsByRole(token, role); // Προσαρμογή κουμπιών
+    toggleButtonsByRole(token, rolesArray); // Προσαρμογή κουμπιών
     fetchProjects(); // Ανάκτηση των ενεργών έργων
 
     // Διαχείριση κουμπιού logout
@@ -11,14 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
             localStorage.removeItem("token");
-            localStorage.removeItem("role");
+            localStorage.removeItem("roles");
             window.location.reload(); // Ανανέωση σελίδας
         });
     }
 });
 
 // **Συνάρτηση εμφάνισης/απόκρυψης κουμπιών**
-function toggleButtonsByRole(token, role) {
+function toggleButtonsByRole(token, rolesArray) {
     const authButton = document.querySelector(".auth-button");
     const freelancerButton = document.querySelector(".freelancer-btn");
     const profileButton = document.querySelector(".profile-btn");
@@ -33,12 +34,12 @@ function toggleButtonsByRole(token, role) {
         if (profileButton) profileButton.style.display = "block"; // Εμφάνιση προφίλ
 
         // Αν ο χρήστης είναι freelancer, κρύβουμε το "Become a Freelancer"
-        if (role === "freelancer" && freelancerButton) {
+        if (rolesArray.includes("ROLE_FREELANCER") && freelancerButton) {
             freelancerButton.style.display = "none";
         }
 
         // Αν ο χρήστης είναι **admin**, εμφανίζουμε τα admin κουμπιά
-        if (role === "admin") {
+        if (rolesArray.includes("ROLE_ADMIN")) {
             if (freelancerFormsButton) freelancerFormsButton.style.display = "block";
             if (projectFormsButton) projectFormsButton.style.display = "block";
         } else {

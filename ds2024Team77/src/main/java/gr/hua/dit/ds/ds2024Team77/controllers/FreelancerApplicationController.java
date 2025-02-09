@@ -16,9 +16,11 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
@@ -44,8 +46,20 @@ public class FreelancerApplicationController {
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("") //CORRECT
-    public List<FreelancerApplication> getFreelancerApplications(){
-        return freelancerApplicationService.getFreelancerApplications();
+    public List<FreelancerApplication> getFreelancerApplications() {
+        //return freelancerApplicationService.getFreelancerApplications();
+
+        List<FreelancerApplication> allApplications = freelancerApplicationService.getFreelancerApplications();
+
+        List<FreelancerApplication> pendingApplications = new ArrayList<>();
+        for (FreelancerApplication app : allApplications) {
+            if (app.getStatus().equals("PENDING")) {
+                pendingApplications.add(app);
+
+            }
+        }
+
+        return pendingApplications;
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})

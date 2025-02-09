@@ -1,4 +1,4 @@
-const allReportsList = document.getElementById("freelancer-applications");
+const allApplications = document.getElementById("freelancer-applications");
 const JWTtoken = localStorage.getItem("token");
 
 if (!JWTtoken) {
@@ -19,10 +19,10 @@ async function loadFreelancerApplications() {
             const reports = await response.json();
 
             // Clear the list and display fetched reports
-            allReportsList.innerHTML = "";
+            allApplications.innerHTML = "";
             reports.forEach((application) => {
                 const li = document.createElement("li");
-                li.textContent = `Title: ${application.title} - Complaint: ${application.complaint}`;
+                li.textContent = `Id: ${application.id} - Details: ${application.description}`;
 
                 const acceptButton = document.createElement("button");
                 acceptButton.textContent = "ACCEPT";
@@ -30,11 +30,12 @@ async function loadFreelancerApplications() {
 
                 const rejectButton = document.createElement("button");
                 rejectButton.textContent = "REJECT";
-                acceptButton.onclick = () => handleRejection(application.id);
+                rejectButton.onclick = () => handleRejection(application.id);
 
 
-                li.appendChild(resolveButton);
-                allReportsList.appendChild(li);
+                li.appendChild(acceptButton);
+                li.appendChild(rejectButton);
+                allApplications.appendChild(li);
             });
 
         } else {
@@ -45,9 +46,6 @@ async function loadFreelancerApplications() {
         console.error("Error loading reports:", error);
     }
 }
-
-
-
 
 // Approve freelancer
 async function handleApproval(id) {
