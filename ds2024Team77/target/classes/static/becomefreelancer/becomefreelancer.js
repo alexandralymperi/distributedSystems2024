@@ -1,21 +1,29 @@
 const form = document.getElementById('freelancer-form');
 const successMessage = document.getElementById('success-message');
 const errorMessage = document.getElementById('error-message');
+const JWTtoken = localStorage.getItem('token');
+
+// Αν δεν υπάρχει JWT token στο localStorage, να ειδοποιούμε τον χρήστη
+if (!JWTtoken) {
+    alert('You are not authorized. Please log in.');
+    window.location.href = '/login/login.html'; // Ανακατεύθυνση στην login
+}
 
 form.addEventListener('submit', async function(event) {
     event.preventDefault(); // Αποφυγή της αυτόματης υποβολής της φόρμας
 
     // Συλλογή δεδομένων από τη φόρμα
     const formData = {
-        bio: document.getElementById('bio').value
+        description: document.getElementById('bio').value
     };
 
     try {
         // Αποστολή δεδομένων στον server
-        const response = await fetch('https://localhost:8080/api/freelancer', {
+        const response = await fetch('http://localhost:8080/FreelancerApplication/create', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JWTtoken}`
             },
             body: JSON.stringify(formData)
         });
@@ -34,6 +42,7 @@ form.addEventListener('submit', async function(event) {
         }
     } catch (error) {
         // Αν προκύψει πρόβλημα στο δίκτυο ή άλλο σφάλμα
+        console.error('Error:', error); // Καταγραφή σφάλματος στο κονσόλα
         errorMessage.textContent = 'Something went wrong. Please try again later.';
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';

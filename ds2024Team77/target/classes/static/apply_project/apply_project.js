@@ -1,5 +1,6 @@
 const form = document.getElementById('project-form');
 const successMessage = document.getElementById('success-message');
+const JWTtoken = localStorage.getItem("token");
 
 form.addEventListener('submit', async function(event) {
     event.preventDefault(); // Αποφυγή της αυτόματης υποβολής της φόρμας
@@ -7,15 +8,17 @@ form.addEventListener('submit', async function(event) {
     // Συλλογή δεδομένων από τη φόρμα
     const formData = {
         title: document.getElementById('project-title').value,
-        description: document.getElementById('project-description').value
+        description: document.getElementById('project-description').value,
+        pay: parseFloat(document.getElementById('project-salary').value)
     };
 
     try {
         // Αποστολή δεδομένων στον server
-        const response = await fetch('https://localhost:8080/api/projects', {
+        const response = await fetch('http://localhost:8080/projects', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${JWTtoken}`
             },
             body: JSON.stringify(formData)
         });

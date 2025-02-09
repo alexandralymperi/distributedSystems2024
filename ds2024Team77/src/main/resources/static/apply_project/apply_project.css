@@ -10,20 +10,20 @@ body {
     min-height: 100vh;
 }
 
-.profile-btn {
+.homepage-btn {
     position: absolute;
     top: 60px;          
     right: 40px;         
 }
 
-.profile-btn img {
+.homepage-btn img {
     width: 50px;
     height: 50px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
 
-.profile-btn img:hover {
+.homepage-btn img:hover {
     transform: scale(1.2); 
 }
 
@@ -61,33 +61,42 @@ textarea {
 }
 
 button {
-    width: 50%;
+    width: 35%;
     padding: 10px;
     background: #575656;
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     transition: padding 0.7s;
     margin: 0 auto; 
     display: block; 
 }
 
-button:focus {
-    background-color: #3b3a3a;
-}
-
 button:hover {
     background: #cfced2;
     color: rgb(0, 0, 0);
-    width: 70%;
-    border-radius: 5px;
-    font-size: 20px;
+    width: 40%;
     box-shadow: 0px 5px 5px #888888;
-    padding: 15px;
+    padding: 12px;
     transition: padding 0.7s;
 }
+
+button:active {
+    background-color: #737070f1; /* Πιο σκούρο γκρι */
+}
+
+.form-container {
+    background: rgb(0, 0, 0);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 4px 10px rgb(0, 0, 0);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
 
 .success-message {
     display: none;
@@ -96,3 +105,32 @@ button:hover {
     color: #ff01bb;
     font-weight: bold;
 }
+
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .form-container {
+        width: 95%;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    button {
+        width: 50%;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+    .form-container {
+        width: 98%;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    button {
+        width: 60%;
+        font-size: 14px;
+    }
+}
+

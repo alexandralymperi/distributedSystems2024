@@ -42,21 +42,26 @@ header .freelancer-btn a:hover {
     transition: padding 0.4s;
 }
 
-main {
+main{
     padding: 60px 20px; /* Added padding at the top and bottom */
     text-align: center;
     color: #000000;
 }
 
-main h1 {
+h1 {
     font-size: 36px;
     font-style: normal;
-    color: #ff01bb;
     font-weight: bolder;
     text-transform: uppercase;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.529);
-    margin-bottom: 40px; /* Increased margin at the bottom */
+    text-align: center; 
+    color: transparent; /* Κάνει το χρώμα του κειμένου διαφανές, ώστε να φαίνεται το gradient */
+    background: linear-gradient(to bottom, #ff01bb, #000000); /* Ροζ και μαύρο gradient */
+    -webkit-background-clip: text; /* Χρησιμοποιεί το gradient ως φόντο του κειμένου */
+    background-clip: text; /* Χρησιμοποιεί το gradient ως φόντο του κειμένου */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Ελαφρύ shadow γύρω από το κείμενο */
+    margin-bottom: 40px; /* Αυξάνει το margin κάτω από τον τίτλο */
 }
+
 
 .profile-btn {
     position: absolute;

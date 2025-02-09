@@ -1,35 +1,58 @@
- // Load freelancers from backend
- async function loadFreelancerApplications() {
+const allReportsList = document.getElementById("freelancer-applications");
+const JWTtoken = localStorage.getItem("token");
+
+if (!JWTtoken) {
+    alert("Please login first!");
+} 
+
+async function loadFreelancerApplications() {
     try {
-        const response = await fetch("http://localhost:8080/api/freelancers");
-        const freelancers = await response.json();
-        
-        freelancerList.innerHTML = "";
-        freelancers.forEach((app) => {
-            const li = document.createElement("li");
-            li.textContent = `${app.name} - Skills: ${app.skills}`;
-
-            const approveButton = document.createElement("button");
-            approveButton.textContent = "Approve";
-            approveButton.onclick = () => handleApproval(app._id);
-
-            const rejectButton = document.createElement("button");
-            rejectButton.textContent = "Reject";
-            rejectButton.onclick = () => handleRejection(app._id);
-
-            li.appendChild(approveButton);
-            li.appendChild(rejectButton);
-            freelancerList.appendChild(li);
+        const response = await fetch("http://localhost:8080/FreelancerApplication", {
+            method: "GET",
+            headers: { 
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${JWTtoken}`
+            }
         });
+
+        if (response.ok) {
+            const reports = await response.json();
+
+            // Clear the list and display fetched reports
+            allReportsList.innerHTML = "";
+            reports.forEach((application) => {
+                const li = document.createElement("li");
+                li.textContent = `Title: ${application.title} - Complaint: ${application.complaint}`;
+
+                const acceptButton = document.createElement("button");
+                acceptButton.textContent = "ACCEPT";
+                acceptButton.onclick = () => handleApproval(application.id);
+
+                const rejectButton = document.createElement("button");
+                rejectButton.textContent = "REJECT";
+                acceptButton.onclick = () => handleRejection(application.id);
+
+
+                li.appendChild(resolveButton);
+                allReportsList.appendChild(li);
+            });
+
+        } else {
+            const errorText = await response.text();
+            console.error("Error loading reports:", errorText);
+        }
     } catch (error) {
-        console.error("Error loading freelancers:", error);
+        console.error("Error loading reports:", error);
     }
 }
+
+
+
 
 // Approve freelancer
 async function handleApproval(id) {
     try {
-        await fetch(`http://localhost:8080/api/freelancers/approve/${id}`, {
+        await fetch(`http://localhost:8080/FreelancerApplication/${id}/approve`, {
             method: "PUT" });
         alert("Freelancer approved!");
         loadFreelancerApplications();
@@ -41,7 +64,7 @@ async function handleApproval(id) {
 // Reject freelancer
 async function handleRejection(id) {
     try {
-        await fetch(`http://localhost:8080/api/freelancers/reject/${id}`, { method: "DELETE" });
+        await fetch(`http://localhost:8080/FreelancerApplication/${id}`, { method: "DELETE" });
         alert("Freelancer rejected!");
         loadFreelancerApplications();
     } catch (error) {

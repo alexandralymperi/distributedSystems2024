@@ -96,3 +96,8 @@ button:hover {
     color: #ff01bb;
     font-weight: bold;
 }
+
+.error-message {
+    display: none;
+    color: #ff01bb;
+}

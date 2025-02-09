@@ -1,11 +1,9 @@
-
 body {
     font-family: Arial, sans-serif;
     background: url('../images/main_index.jpg') no-repeat center center fixed;
     color: white;
     margin: 0;
     padding: 0;
-   
 }
 
 header {
@@ -84,6 +82,15 @@ main {
     background-color: #eeb5d3;
 }
 
+/* Νέο container για το κουμπί και τη φόρμα */
+.new-report-container {
+    display: none;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Στυλ για το κουμπί "New Report" */
 .new-report-btn {
     background-color: #ff01bb;
     color: white;
@@ -101,3 +108,52 @@ main {
     background-color: #eeb5d3;
 }
 
+/* Η φόρμα ξεκινά κρυμμένη */
+.report-form {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, padding 0.3s ease-in-out;
+    background: #1e1e1e;
+    padding: 0 20px;
+    border-radius: 8px;
+    width: 300px;
+    margin: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Inputs και Textarea */
+.report-form input,
+.report-form textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ff01bb;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #000;
+    color: white;
+}
+
+/* Submit button */
+#submit-report {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    border-radius: 5px;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+#submit-report:hover {
+    background-color: #218838;
+}
+
+/* Όταν γίνεται expand */
+.report-form.show {
+    max-height: 200px;
+    padding: 20px;
+}

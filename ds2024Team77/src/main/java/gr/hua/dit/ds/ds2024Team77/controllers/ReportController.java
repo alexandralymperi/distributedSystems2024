@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/report")
@@ -94,7 +95,12 @@ public class ReportController {
             System.out.println(auth.getId());
             System.out.println(report.getReporter().getId());
 
-            if (!report.getReporter().getId().equals(auth.getId())) {
+            /*if (!report.getReporter().getId().equals(auth.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
+            }*/
+
+            if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))
+                    && !report.getReporter().getId().equals(auth.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
             }
 
@@ -108,6 +114,34 @@ public class ReportController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 
+        }
+
+    }
+
+    @Secured("ROLE_BASIC")
+    @GetMapping("/myreports") //correcct ???
+    public ResponseEntity<?> getMyReports(@AuthenticationPrincipal UserDetailsImpl auth){
+
+        try {
+            List<Report> allReports = rService.getReports();
+
+            if (allReports.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+
+            List<Report> myReports = allReports.stream()
+                    .filter(report -> report.getReporter().getId().equals(auth.getId()))
+                    .collect(Collectors.toList());
+
+            if (myReports.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(myReports);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
         }
 
     }

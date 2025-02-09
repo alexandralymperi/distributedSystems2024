@@ -42,11 +42,11 @@ public class FreelancerApplicationController {
         this.userRepository = userRepository;
     }
 
-//    @Secured({"ROLE_ADMIN"})
-//    @GetMapping("") //CORRECT
-//    public List<FreelancerApplication> getFreelancerApplications(){
-//        return freelancerApplicationService.getFreelancerApplications();
-//    }
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("") //CORRECT
+    public List<FreelancerApplication> getFreelancerApplications(){
+        return freelancerApplicationService.getFreelancerApplications();
+    }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{freelancerapplicationId}") //CORRECT

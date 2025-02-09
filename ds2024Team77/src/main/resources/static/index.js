@@ -79,7 +79,6 @@ function fetchProjects() {
 }
 
 // **Συνάρτηση εμφάνισης των έργων στις κάρτες**
-// **Συνάρτηση εμφάνισης των έργων στις κάρτες**
 function displayProjects(projects) {
     const projectContainer = document.querySelector(".projects");
     projectContainer.innerHTML = ""; // Καθαρισμός προηγούμενων δεδομένων
@@ -114,6 +113,12 @@ function displayProjects(projects) {
 
 // **Διαχείριση Apply Now για freelancers**
 function handleProjectApplications(role) {
+
+    // TODO Listener on apply-button "submit"
+
+
+
+
     document.querySelectorAll('.apply-button').forEach(button => {
         if (role !== "freelancer") {
             button.style.display = "none"; // Απόκρυψη κουμπιού Apply Now για μη freelancers

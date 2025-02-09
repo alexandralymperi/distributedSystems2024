@@ -15,22 +15,12 @@
 
 <div class="profile-container">
     <div class="profile-header">
-        <div class="profile-photo">
-            <img src="../images/profile_pic.webp" alt="Profile Photo">
-        </div>
 
         <div class="profile-info">
-            <h1 id="username-display">John Bla</h1>
+            <h1 id="username-display" class="username">John Bla</h1>
             <input type="text" id="username-input" value="John Bla" style="display: none;">
-            <button class="edit-btn" id="edit-username-btn">Edit</button>
+            <p id="email-display">john.bla@example.com</p> <!-- Προσθέτουμε το email εδώ -->
         </div>
-    </div>
-
-    <div class="bio">
-        <h1>About Me</h1>
-        <p id="bio-display">About me</p>
-        <textarea id="bio-input" style="display: none;">About me</textarea>
-        <button class="edit-btn" id="edit-bio-btn">Edit</button>
     </div>
 
     <div class="projects">
@@ -49,7 +39,7 @@
             </div>
         </div>
 
-        <button class="add-project-btn" onclick="window.location.href='apply_project.html'">Add New Project</button>
+        <button class="add-project-btn" onclick="window.location.href='/apply_project/apply_project.html'">Add New Project</button>
 
     </div>
 
