@@ -1,5 +1,6 @@
 package gr.hua.dit.ds.ds2024Team77.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -54,26 +55,32 @@ public class User {
 
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<Project> customerProjects;
 
     @OneToMany(mappedBy = "freelancer", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<Project> freelancerProjects;
 
     @OneToMany(mappedBy = "sender", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<Messages> sentMessages;
 
     @OneToMany(mappedBy = "receiver", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<Messages> receivedMessages;
 
     @OneToMany(mappedBy = "reporter", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<Report> reportsMade;
 
     @OneToMany(mappedBy = "applicant", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.PERSIST})
+    @JsonIgnore
     private List<ProjectApplications> applications;
 
     //Constructors

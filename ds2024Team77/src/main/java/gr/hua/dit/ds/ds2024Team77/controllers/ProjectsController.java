@@ -150,4 +150,21 @@ public class ProjectsController {
 
     }
 
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/pending") //CORRECT
+    public ResponseEntity<?> getPendingProjects() {
+
+        try {
+            List<Project> activeProjects = pService.getByStatus("PENDING_APPROVAL");
+
+            if (activeProjects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No pending projects found.");
+            }
+
+            return ResponseEntity.ok(activeProjects);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
 }
