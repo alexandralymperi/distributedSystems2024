@@ -73,11 +73,20 @@ async function loadWorkingOn() {
             projects.forEach(proj => {
                 const projectDiv = document.createElement("div");
                 projectDiv.classList.add("project-container");
+                const messageButton = document.createElement("button");
+                messageButton.textContent = "Message Customer";
+                messageButton.classList.add("project-btn"); // Χρήση CSS από τα άλλα κουμπιά
+
+                // Όταν πατηθεί το κουμπί, ανακατευθύνει σε chat σελίδα (ή alert προς το παρόν)
+                messageButton.addEventListener("click", () => {
+                    window.location.href = `/chat.html?projectId=${proj.id}`;
+                });
                 projectDiv.innerHTML = `
                     <div class="project">
                         <h2>${proj.title}</h2>
                         <p>${proj.description}</p>
                     </div>`;
+                projectDiv.appendChild(messageButton);
                 workingOnContainer.appendChild(projectDiv);
             });
         } else {
@@ -105,11 +114,16 @@ async function loadMyProjects() {
             projects.forEach(proj => {
                 const projectDiv = document.createElement("div");
                 projectDiv.classList.add("project-container");
+                const actionButton = document.createElement("button");
+                actionButton.textContent = getButtonText(proj.status);
+                actionButton.classList.add("project-btn");
+                actionButton.addEventListener("click", () => redirectToPage(proj));
                 projectDiv.innerHTML = `
                     <div class="project">
                         <h2>${proj.title}</h2>
                         <p>${proj.description}</p>
                     </div>`;
+                projectDiv.appendChild(actionButton);
                 projectsContainer.appendChild(projectDiv);
             });
         } else {
@@ -117,6 +131,28 @@ async function loadMyProjects() {
         }
     } catch (error) {
         console.error("Error loading working on projects:", error);
+    }
+}
+
+
+function getButtonText(status) {
+    switch (status) {
+        case "ACTIVE":
+            return "APPICATIONS";
+        case "ONGOING":
+            return "MESSAGE FREELANCER";
+        default:
+            return "View Details";
+    }
+}
+
+function redirectToPage(project) {
+    if (project.status === "ACTIVE") {
+        window.location.href = `/applications.html?projectId=${project.id}`;
+    } else if (project.status === "ONGOING") {
+        window.location.href = `/discussion.html?projectId=${project.id}`;
+    } else {
+        alert("No action available for this project.");
     }
 }
 

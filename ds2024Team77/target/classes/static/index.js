@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Ανάκτηση δεδομένων χρήστη από localStorage (αν υπάρχει)
     const token = localStorage.getItem("token"); // Ελέγχει αν υπάρχει login
     const roles = localStorage.getItem("roles"); 
-    const rolesArray = JSON.parse(roles);
+    const rolesArray = roles ? JSON.parse(roles) : [];
 
     toggleButtonsByRole(token, rolesArray); // Προσαρμογή κουμπιών
-    fetchProjects(); // Ανάκτηση των ενεργών έργων
+    fetchProjects(rolesArray); // Ανάκτηση των ενεργών έργων
 
     // Διαχείριση κουμπιού logout
     const logoutButton = document.getElementById("logout-btn");
@@ -65,22 +65,27 @@ function toggleButtonsByRole(token, rolesArray) {
 }
 
 // **Συνάρτηση για να φέρει τα ενεργά έργα**
-function fetchProjects() {
+// **Συνάρτηση για να φέρει τα ενεργά έργα**
+async function fetchProjects(rolesArray) {
     const url = "http://localhost:8080/projects/active"; // Αντικατέστησε με την URL του API σου
+    try {
+        const response = await fetch(url);
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            // Κλήση της συνάρτησης για την εμφάνιση των έργων
-            displayProjects(data);
-        })
-        .catch(error => {
-            console.error("Error fetching projects:", error);
-        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        displayProjects(data, rolesArray); // ✅ Εμφάνιση των έργων
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        alert("Failed to load projects. Please try again later."); // ✅ Εμφάνιση σφάλματος στον χρήστη
+    }
 }
 
+
 // **Συνάρτηση εμφάνισης των έργων στις κάρτες**
-function displayProjects(projects) {
+function displayProjects(projects, rolesArray) {
     const projectContainer = document.querySelector(".projects");
     projectContainer.innerHTML = ""; // Καθαρισμός προηγούμενων δεδομένων
 
@@ -94,69 +99,55 @@ function displayProjects(projects) {
     projects.forEach(project => {
         const projectCard = document.createElement("div");
         projectCard.classList.add("project-card");
-        projectCard.innerHTML = `
+
+        // Δημιουργία βασικού περιεχομένου της κάρτας
+        let cardContent = `
             <h3>${project.title}</h3>
             <p>${project.description}</p>
             <p><strong>Pay:</strong> $${project.pay}</p>
-            <button type="submit">Apply Now</button>
-            <div class="success-message">Applied Successfully!</div>
         `;
+
+        // **Έλεγχος αν ο χρήστης έχει τον ρόλο "ROLE_FREELANCER"**
+        if (rolesArray.includes("ROLE_FREELANCER")) {
+            cardContent += `<button class="apply-button" data-project-id="${project.id}">Apply Now</button>`;
+        }
+
+        projectCard.innerHTML = cardContent;
         projectContainer.appendChild(projectCard);
     });
 
+    // **Προσθήκη event listeners μόνο στα εμφανιζόμενα κουμπιά**
     document.querySelectorAll(".apply-button").forEach(button => {
-        button.addEventListener("click", () => applyForProject(button.dataset.projectId));
+        button.addEventListener("click", () => {
+            const projectId = button.getAttribute("data-project-id");
+            applyForProject(projectId);
+        });
     });
-    // Απόκρυψη κουμπιού Apply Now για μη freelancers
-    handleProjectApplications(localStorage.getItem("role"));
 }
 
 
-// **Διαχείριση Apply Now για freelancers**
-function handleProjectApplications(role) {
-
-    // TODO Listener on apply-button "submit"
-
-
-
-
-    document.querySelectorAll('.apply-button').forEach(button => {
-        if (role !== "freelancer") {
-            button.style.display = "none"; // Απόκρυψη κουμπιού Apply Now για μη freelancers
-        }
-    });
-
-    // **Συνάρτηση αποστολής αίτησης (POST request)**
-    function applyForProject(projectId) {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("You must be logged in to apply for projects.");
-            return;
-        }
-
-        fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Ενημερωμένο path
+// **Συνάρτηση αποστολής αίτησης (POST request)**
+async function applyForProject(projectId) {
+    
+    try {
+        const response = await fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Ενημερωμένο path
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                status: "PENDING"
+                applicationDate: new Date().toISOString(),
             })
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to apply for project.");
-                }
-                return response.text();
-            })
-            .then(message => {
-                alert(message);
-                document.querySelector(`button[data-project-id="${projectId}"]`).nextElementSibling.style.display = "block";
-            })
-            .catch(error => {
-                alert("Error: " + error.message);
-            });
+        if (response.ok) {
+            alert(message);
+        } else {
+           
+        }
+    } catch (error) {
+        console.error("Error loading user data:", error.message);
     }
 
 }
+

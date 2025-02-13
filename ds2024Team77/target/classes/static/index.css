@@ -149,3 +149,7 @@ button:hover {
     color: #ff01bb;
     font-weight: bold;
 }
+
+#apply-button{
+    display: none;
+}
