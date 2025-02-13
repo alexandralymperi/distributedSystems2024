@@ -1,38 +1,35 @@
 // Σημεία της σελίδας για την εμφάνιση των δεδομένων χρήστη
 const usernameDisplay = document.getElementById("username-display");
+const emailDisplay = document.getElementById("email-display");
 const projectsContainer = document.querySelector(".projects");
 const workingOnContainer = document.querySelector(".working-on");
 const JWTtoken = localStorage.getItem("token");
+const roles = localStorage.getItem("roles"); 
+const userId = localStorage.getItem("userId");
+const rolesArray = JSON.parse(roles);
 
-// Συνάρτηση για να αποθηκεύσουμε τα δεδομένα του χρήστη και το token στο localStorage
-// function storeUserData(responseData) {
-//     const { accessToken, id, username, email, roles } = responseData;
-//     // Αποθήκευση του token και των δεδομένων χρήστη στο localStorage
-//     localStorage.setItem("token", accessToken);
-//     localStorage.setItem("userId", id);
-//     localStorage.setItem("username", username);
-//     localStorage.setItem("email", email);
-//     localStorage.setItem("roles", JSON.stringify(roles));
-// }
+
+if (!JWTtoken) {
+    alert('You are not authorized. Please log in.');
+    window.location.href = '/login/login.html'; // Ανακατεύθυνση στην login
+}
 
 // Συνάρτηση για να φορτώσουμε τα δεδομένα του χρήστη
 async function loadUserData() {
-    if (!JWTtoken) {
-        alert("You are not authenticated. Please log in.");
-        window.location.href = "/login/login.html"; // Ανακατεύθυνση στην σελίδα login
-        return;
-    }
 
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}`, {
             headers: {
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${JWTtoken}`
             }
         });
 
         if (response.ok) {
             const user = await response.json();
-            usernameDisplay.textContent = `${user.name} ${user.surname}`;  // Εμφανίζουμε το όνομα του χρήστη
+            usernameDisplay.textContent = `${user.name} ${user.surname}`;
+            emailDisplay.textContent = `${user.email}`;
+            loadMyProjects();
+            projectsContainer.style.display = "block";   // Εμφανίζουμε το όνομα του χρήστη
             checkUserRole(user.roles);  // Έλεγχος για τον ρόλο του χρήστη
         } else {
             if (response.status === 403) {
@@ -49,9 +46,8 @@ async function loadUserData() {
 
 // Συνάρτηση για να ελέγξουμε αν ο χρήστης είναι freelancer και να φορτώσουμε τα έργα που δουλεύει
 function checkUserRole(roles) {
-    // Έλεγχος αν ο χρήστης έχει ρόλο ROLE_FREELANCER
-    const freelancerRole = roles.some(role => role.name === "ROLE_FREELANCER");
-    if (freelancerRole) {
+
+    if (rolesArray.includes("ROLE_FREELANCER")) {
         loadWorkingOn(); // Αν ο χρήστης είναι freelancer, φορτώνουμε τα έργα
         workingOnContainer.style.display = "block";  // Εμφάνιση του τμήματος "Working On..."
     } else {
@@ -64,7 +60,8 @@ async function loadWorkingOn() {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch("http://localhost:8080/api/projects/freelancer", {
+
+        const response = await fetch("http://localhost:8080/projects/freelancer", {
             headers: {
                 "Authorization": `Bearer ${JWTtoken}`
             }
@@ -91,5 +88,36 @@ async function loadWorkingOn() {
     }
 }
 
-// Κλήση για να φορτώσουμε τα δεδομένα του χρήστη όταν η σελίδα φορτώνει
+async function loadMyProjects() {
+    const token = localStorage.getItem("token");
+
+    try {
+
+        const response = await fetch("http://localhost:8080/projects/customer", {
+            headers: {
+                "Authorization": `Bearer ${JWTtoken}`
+            }
+        });
+
+        if (response.ok) {
+            const projects = await response.json();
+            projectsContainer.innerHTML = "<h1>My Projects</h1>";
+            projects.forEach(proj => {
+                const projectDiv = document.createElement("div");
+                projectDiv.classList.add("project-container");
+                projectDiv.innerHTML = `
+                    <div class="project">
+                        <h2>${proj.title}</h2>
+                        <p>${proj.description}</p>
+                    </div>`;
+                projectsContainer.appendChild(projectDiv);
+            });
+        } else {
+            console.error("Error loading working on projects:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error loading working on projects:", error);
+    }
+}
+
 loadUserData();
