@@ -18,7 +18,6 @@ async function loadFreelancerApplications() {
         if (response.ok) {
             const apps = await response.json();
 
-            // Clear the list and display fetched reports
             allApplications.innerHTML = "";
             apps.forEach((application) => {
                 const li = document.createElement("li");

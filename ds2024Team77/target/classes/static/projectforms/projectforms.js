@@ -27,7 +27,7 @@ async function loadProjectSubmissions() {
     
                 const approveButton = document.createElement("button");
                 approveButton.textContent = "Approve";
-                approveButton.onclick = () => handleApproval(proj._id);
+                approveButton.onclick = () => handleApproval(proj.id);
     
                 const rejectButton = document.createElement("button");
                 rejectButton.textContent = "Reject";
@@ -53,7 +53,7 @@ async function loadProjectSubmissions() {
 async function handleApproval(id) {
     
     try {
-        await fetch(`http://localhost:8080/projets/${id}/approve`, 
+        await fetch(`http://localhost:8080/projects/${id}/approve`, 
         { method: "PUT", 
             headers: {
                 'Authorization': `Bearer ${JWTtoken}`
