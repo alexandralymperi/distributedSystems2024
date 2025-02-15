@@ -1,5 +1,7 @@
 const allApplications = document.getElementById("applications");
 const JWTtoken = localStorage.getItem("token");
+const urlParams = new URLSearchParams(window.location.search);
+const projectId = urlParams.get("projectId");
 
 if (!JWTtoken) {
     alert("Please login first!");
@@ -7,7 +9,7 @@ if (!JWTtoken) {
 
 async function loadFreelancerApplications() {
     try {
-        const response = await fetch("http://localhost:8080/ProjectApplication", {
+        const response = await fetch(`http://localhost:8080/ProjectApplication/${projectId}/applications`, {
             method: "GET",
             headers: { 
                 'Content-Type': 'application/json',
