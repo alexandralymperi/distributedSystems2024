@@ -1,3 +1,9 @@
+const JWTtoken = localStorage.getItem("token");
+
+if (!JWTtoken) {
+    alert("Please login first!");
+} 
+
 document.addEventListener("DOMContentLoaded", () => {
     // Ανάκτηση δεδομένων χρήστη από localStorage (αν υπάρχει)
     const token = localStorage.getItem("token"); // Ελέγχει αν υπάρχει login
@@ -65,7 +71,6 @@ function toggleButtonsByRole(token, rolesArray) {
 }
 
 // **Συνάρτηση για να φέρει τα ενεργά έργα**
-// **Συνάρτηση για να φέρει τα ενεργά έργα**
 async function fetchProjects(rolesArray) {
     const url = "http://localhost:8080/projects/active"; // Αντικατέστησε με την URL του API σου
     try {
@@ -128,26 +133,38 @@ function displayProjects(projects, rolesArray) {
 
 // **Συνάρτηση αποστολής αίτησης (POST request)**
 async function applyForProject(projectId) {
-    
     try {
-        const response = await fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Ενημερωμένο path
+        const response = await fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Updated path
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${JWTtoken}`
             },
             body: JSON.stringify({
                 applicationDate: new Date().toISOString(),
             })
-        })
+        });
+
         if (response.ok) {
-            alert(message);
+            const contentType = response.headers.get("Content-Type");
+
+            // Check if the response is JSON
+            if (contentType && contentType.includes("application/json")) {
+                const data = await response.json(); // Parse as JSON
+                const message = data.message || "Successfully applied for the project!";
+                alert(message);
+            } else {
+                const text = await response.text(); // If not JSON, handle as plain text
+                alert(text || "Successfully applied for the project!");
+            }
         } else {
-           
+            const errorData = await response.text(); // Try to get the error message as text
+            alert(errorData || "Failed to apply for the project.");
         }
     } catch (error) {
         console.error("Error loading user data:", error.message);
+        alert("An error occurred. Please try again later."); // General error message
     }
-
 }
+
 
