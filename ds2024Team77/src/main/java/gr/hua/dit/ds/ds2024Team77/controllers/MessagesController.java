@@ -84,7 +84,7 @@ public class MessagesController {
 
     }
 
-    //@Secured({"ROLE_BASIC","ROLE_ADMIN"})
+    @Secured({"ROLE_BASIC","ROLE_ADMIN"})
     @GetMapping("/conversation/{userId}") //correct
     public ResponseEntity<?> getConversation(
             @PathVariable Long userId,

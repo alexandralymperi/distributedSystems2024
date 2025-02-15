@@ -1,12 +1,10 @@
 const messageContainer = document.querySelector(".message-container");
 const messageInput = document.querySelector("input[type='text']");
-const sendButton = document.querySelector("button");
-const JWTtoken = localStorage.getItem("token");
-
-
-// 🆕 Παίρνουμε το freelancerId από το URL
+const sendButton = document.getElementById("send-button");
+const senderId = Number(localStorage.getItem("userId")); 
 const urlParams = new URLSearchParams(window.location.search);
 const freelancerId = urlParams.get("freelancerId");
+const JWTtoken = localStorage.getItem("token");
 
 if (!freelancerId) {
     alert("Error: No freelancer ID found.");
@@ -17,11 +15,11 @@ if (!JWTtoken) {
     window.location.href = '/login/login.html';
 }
 
-// Αναγκαία functions
-
 async function fetchMessages() {
     try {
-        const response = await fetch(`http://localhost:8080/conversation/${freelancerId}`, {
+        console.log("Fetching messages...");
+
+        const response = await fetch(`http://localhost:8080/messages/conversation/${freelancerId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -29,42 +27,77 @@ async function fetchMessages() {
             }
         });
 
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            console.error(`Error fetching messages. Status: ${response.status}, Message: ${errorMessage}`);
-            return; // Αποφεύγουμε την περαιτέρω εκτέλεση εάν υπάρχει σφάλμα
+        if (response.ok) {
+            const messages = await response.json();
+            console.log("Messages received:", messages);
+            displayMessages(messages);
+        } else {
+            console.error(`Failed to fetch messages: ${response.status}`);
         }
-
-        const messages = await response.json();
-        displayMessages(messages);
     } catch (error) {
         console.error("Error fetching messages:", error);
     }
 }
 
 function displayMessages(messages) {
+    console.log("Displaying messages...", messages);
+
     messageContainer.innerHTML = "";
+
     messages.forEach(msg => {
+        console.log("Message:", msg);
+        console.log("Sender ID:", msg.sender.id, "Stored sender ID:", senderId);
+
         const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", msg.sender.id === senderId ? "sender-message" : "receiver-message");
 
-        messageDiv.classList.add("message",
-            msg.sender.id == senderId ? "sender-message" : "receiver-message");
+        const messageTextDiv = document.createElement("div");
+        messageTextDiv.classList.add("message-text");
+        messageTextDiv.textContent = msg.contents;
 
-        messageDiv.textContent = msg.content;
+        const senderNameDiv = document.createElement("div");
+        senderNameDiv.classList.add("sender-name");
+        senderNameDiv.textContent = msg.sender.name; 
+
+        const timeDiv = document.createElement("div");
+        timeDiv.classList.add("message-time");
+        timeDiv.textContent = formatTime(msg.date); 
+
+        const headerDiv = document.createElement("div");
+        headerDiv.classList.add("message-header");
+        headerDiv.appendChild(senderNameDiv);
+        headerDiv.appendChild(timeDiv);
+
+        messageDiv.appendChild(headerDiv);
+        messageDiv.appendChild(messageTextDiv);
+
         messageContainer.appendChild(messageDiv);
     });
+
+    messageContainer.scrollTop = messageContainer.scrollHeight;
 }
+
+function formatTime(isoString) {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString("el-GR", { hour: "2-digit", minute: "2-digit" });
+}
+
 
 async function sendMessage() {
     const messageText = messageInput.value.trim();
     if (!messageText) return;
 
     const messageData = { 
-        content: messageText
+        contents: messageText,                 
+        date: new Date().toISOString()
     };
 
+    console.log("Message Data Sent:", JSON.stringify(messageData));
+
     try {
-        const response = await fetch(`http://localhost:8080/send/${freelancerId}`, {
+        sendButton.disabled = true; 
+
+        const response = await fetch(`http://localhost:8080/messages/send/${freelancerId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -78,23 +111,25 @@ async function sendMessage() {
         }
 
         messageInput.value = "";
-        fetchMessages();
+        fetchMessages(); 
     } catch (error) {
+        console.error("Server response body:", responseBody); // Εμφανίζουμε την απάντηση του server για debugging
         console.error("Error sending message:", error);
+    } finally {
+        sendButton.disabled = false;
     }
 }
 
-// Βασική εκκίνηση της εφαρμογής όταν το DOM είναι έτοιμο
 document.addEventListener("DOMContentLoaded", () => {
-    sendButton.addEventListener("click", sendMessage);
-    messageInput.addEventListener("keypress", (event) => {
+    if (sendButton) {
+        sendButton.addEventListener("click", sendMessage);
+    }    messageInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
             sendMessage();
         }
     });
 
-    // Ανάκτηση και εμφάνιση των μηνυμάτων μόλις φορτώσει η σελίδα
-    fetchMessages();
-    // setInterval(fetchMessages, 5000); // Αν θέλεις να επαναλαμβάνεται κάθε 5 δευτερόλεπτα
-});
+    fetchMessages(); 
 
+    // setInterval(fetchMessages, 5000); // Ενεργοποίησε το αν θες auto-refresh κάθε 5 δευτερόλεπτα
+});

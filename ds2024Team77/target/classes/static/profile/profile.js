@@ -78,7 +78,7 @@ async function loadWorkingOn() {
 
                 // Όταν πατηθεί το κουμπί, ανακατευθύνει σε chat σελίδα (ή alert προς το παρόν)
                 messageButton.addEventListener("click", () => {
-                    window.location.href = `/chat.html?projectId=${proj.id}`;
+                    window.location.href = `/messages/messages.html?freelancerId=${proj.customer.id}`;
                 });
                 projectDiv.innerHTML = `
                     <div class="project">

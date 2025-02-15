@@ -1,18 +1,20 @@
+/* Main container */
 main {
     padding: 20px;
     text-align: center;
     color: #000000;
 }
 
+/* General body styling */
 body {
     font-family: Arial, sans-serif;
     background: url('../images/main_index.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
-   
 }
 
+/* Header with logo and profile button */
 header {
     display: flex;
     justify-content: space-between;
@@ -22,10 +24,11 @@ header {
     color: #ffffff;
 }
 
+/* Profile button styling */
 .profile-btn {
     position: fixed;
-    top: 60px;          
-    right: 40px;         
+    top: 60px;
+    right: 40px;
 }
 
 .profile-btn img {
@@ -36,10 +39,10 @@ header {
 }
 
 .profile-btn img:hover {
-    transform: scale(1.2); 
+    transform: scale(1.2);
 }
 
-
+/* Chat container */
 .chat-container {
     max-width: 600px;
     margin: 50px auto;
@@ -49,68 +52,124 @@ header {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Message container */
 .message-container {
     display: flex;
     flex-direction: column;
+    margin: 20px;
 }
 
+/* Each message styling */
 .message {
     padding: 10px;
-    margin: 10px;
+    margin: 10px 0;
     border-radius: 5px;
     max-width: 70%;
     word-wrap: break-word;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
+/* Header containing the sender's name and the message time */
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Styling for the sender's name */
+.sender-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+/* Styling for the message time */
+.message-time {
+    font-size: 10px;
+    color: #555;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* Styling for the message text */
+.message-text {
+    padding: 10px;
+    background-color: #ff01bb;
+    border-radius: 5px;
+    word-wrap: break-word;
+    margin-top: 5px;
+    color: white;
+}
+
+/* Sender's message styling */
 .sender-message {
+    background-color: #ff01bb;
+    color: #fff;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+    border-radius: 15px 15px 0 15px;
+}
+
+/* Receiver's message styling */
+.receiver-message {
     background-color: #e0e0e0;
     color: #000;
     align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+    border-radius: 15px 15px 15px 0;
 }
 
-.receiver-message {
-    background-color:#ff01bb;
-    color: #fff;
-    align-self: flex-end;
+/* Input container */
+.input-container {
+    display: flex;
+    align-items: center;
+    margin: 20px;
 }
 
-
-.message input {
-    width: calc(100% - 20px);
-    padding: 8px;
-    margin: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-
-button {
-    width: 40%;
+/* Styling for the message input field */
+.message-input {
+    width: 80%;
     padding: 10px;
-    background: #ff01bb;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Focus state for the input */
+.message-input:focus {
+    border-color: #ff01bb;
+    background-color: #fff;
+}
+
+/* Styling for the send button */
+.send-button {
+    width: 15%;
+    padding: 10px;
+    background-color: #ff01bb;
     color: white;
     border: none;
-    border-radius: 5px;
-    font-size: 20px;
+    border-radius: 25px;
+    font-size: 16px;
     cursor: pointer;
-    transition: padding 0.7s;
-    margin: 0 auto; 
-    display: block; 
+    transition: background-color 0.3s ease;
+    margin-left: 10px; /* Spacing between the input field and button */
 }
 
-button:focus {
-    background-color: #3b3a3a;
+/* Hover state for the button */
+.send-button:hover {
+    background-color: #f50098;
 }
 
-button:hover {
-    background: #cfced2;
-    color: rgb(0, 0, 0);
-    width: 40%;
-    border-radius: 5px;
-    font-size: 20px;
-    box-shadow: 0px 5px 5px #888888;
-    padding: 15px;
-    transition: padding 0.3s;
+/* Button focus state */
+.send-button:focus {
+    outline: none;
 }
