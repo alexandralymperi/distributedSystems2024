@@ -173,3 +173,41 @@ header {
 .send-button:focus {
     outline: none;
 }
+
+
+/* Chat container */
+.chat-container {
+    max-width: 600px;
+    height: 500px; /* Σταθερό ύψος για το container */
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message container */
+.message-container {
+    flex: 1; /* Παίρνει όλο τον διαθέσιμο χώρο */
+    padding: 20px;
+    overflow-y: auto; /* Ενεργοποίηση του scrolling */
+    max-height: 400px; /* Περιορισμός ύψους */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Για να κάνουμε το scrollbar πιο ωραίο */
+.message-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.message-container::-webkit-scrollbar-thumb {
+    background-color: #ff01bb;
+    border-radius: 10px;
+}
+
+.message-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}

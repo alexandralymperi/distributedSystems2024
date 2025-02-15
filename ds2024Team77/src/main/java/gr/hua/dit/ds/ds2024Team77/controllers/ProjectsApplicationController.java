@@ -93,7 +93,7 @@ public class ProjectsApplicationController {
 
     }
 
-    @Secured({"ROLE_FREELANCER"})
+    //@Secured({"ROLE_FREELANCER"})
     @DeleteMapping("/{applicationId}")
     public ResponseEntity<String> deleteProjectApplication(@PathVariable Long applicationId){
 
