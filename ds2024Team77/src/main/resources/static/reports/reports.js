@@ -117,5 +117,4 @@ async function resolveReport(id) {
     }
 }
 
-// Initial load of reports for admin
 loadAllReports();

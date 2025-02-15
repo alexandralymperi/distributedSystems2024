@@ -131,5 +131,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchMessages(); 
 
-    // setInterval(fetchMessages, 5000); // Ενεργοποίησε το αν θες auto-refresh κάθε 5 δευτερόλεπτα
+    setInterval(fetchMessages, 5000); 
 });
