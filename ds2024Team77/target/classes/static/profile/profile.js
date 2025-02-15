@@ -60,7 +60,6 @@ async function loadWorkingOn() {
     const token = localStorage.getItem("token");
 
     try {
-
         const response = await fetch("http://localhost:8080/projects/freelancer", {
             headers: {
                 "Authorization": `Bearer ${JWTtoken}`
@@ -101,7 +100,6 @@ async function loadMyProjects() {
     const token = localStorage.getItem("token");
 
     try {
-
         const response = await fetch("http://localhost:8080/projects/customer", {
             headers: {
                 "Authorization": `Bearer ${JWTtoken}`
@@ -150,7 +148,7 @@ function redirectToPage(project) {
     if (project.status === "ACTIVE") {
         window.location.href = `/applications.html?projectId=${project.id}`;
     } else if (project.status === "ONGOING") {
-        window.location.href = `/discussion.html?projectId=${project.id}`;
+        window.location.href = `/messages/messages.html`;
     } else {
         alert("No action available for this project.");
     }

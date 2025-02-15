@@ -1,0 +1,116 @@
+main {
+    padding: 20px;
+    text-align: center;
+    color: #000000;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/main_index.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+   
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.profile-btn {
+    position: fixed;
+    top: 60px;          
+    right: 40px;         
+}
+
+.profile-btn img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-btn img:hover {
+    transform: scale(1.2); 
+}
+
+
+.chat-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+}
+
+.sender-message {
+    background-color: #e0e0e0;
+    color: #000;
+    align-self: flex-start;
+}
+
+.receiver-message {
+    background-color:#ff01bb;
+    color: #fff;
+    align-self: flex-end;
+}
+
+
+.message input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+button {
+    width: 40%;
+    padding: 10px;
+    background: #ff01bb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: padding 0.7s;
+    margin: 0 auto; 
+    display: block; 
+}
+
+button:focus {
+    background-color: #3b3a3a;
+}
+
+button:hover {
+    background: #cfced2;
+    color: rgb(0, 0, 0);
+    width: 40%;
+    border-radius: 5px;
+    font-size: 20px;
+    box-shadow: 0px 5px 5px #888888;
+    padding: 15px;
+    transition: padding 0.3s;
+}

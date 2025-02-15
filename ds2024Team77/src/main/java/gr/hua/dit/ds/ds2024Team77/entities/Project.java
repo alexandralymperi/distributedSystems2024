@@ -35,13 +35,11 @@ public class Project {
     @NotBlank
     private String status;
 
-    //Mappings
-    @JsonIgnore
+    //Mapping
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
     private User customer;
 
-    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "freelancer_id")
     private User freelancer;
