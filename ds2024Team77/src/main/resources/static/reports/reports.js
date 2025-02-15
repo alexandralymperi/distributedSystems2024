@@ -3,6 +3,8 @@ const allReportsList = document.getElementById("all-reports");
 const newReportButton = document.getElementById("new-report");
 const reportForm = document.getElementById('report-form');
 const submitReportButton = document.getElementById("submit-report");
+const roles = localStorage.getItem("roles"); 
+const rolesArray = roles ? JSON.parse(roles) : [];
 
 // Get JWT token from localStorage
 const JWTtoken = localStorage.getItem("token");
@@ -12,8 +14,48 @@ if (!JWTtoken) {
     alert("Please login first!");
 }
 
+// Φόρτωση αναφορών για τον χρήστη
+async function loadUserReports() {
+    try {
+        const response = await fetch("http://localhost:8080/report/myreports", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${JWTtoken}`
+            }
+        });
+
+        if (response.ok) {
+            const reports = await response.json();
+
+            // Καθαρίζουμε τη λίστα και εμφανίζουμε τις αναφορές
+            userReportsList.innerHTML = "";
+            reports.forEach((report) => {
+                const li = document.createElement("li");
+                li.textContent = `Title: ${report.title} - Complaint: ${report.complaint}`;
+
+                userReportsList.appendChild(li);
+            });
+
+        } else {
+            const errorText = await response.text();
+            console.error("Error loading user reports:", errorText);
+        }
+    } catch (error) {
+        console.error("Error loading user reports:", error);
+    }
+}
+
 // Load reports for admin
 async function loadAllReports() {
+
+    if (!rolesArray.includes("ROLE_ADMIN")) {
+        const adminSection = document.getElementById("admin-section");
+        adminSection.style.display = "none";
+        return;
+    }
+
+
     try {
         const response = await fetch("http://localhost:8080/report", {
             method: "GET",
@@ -117,4 +159,5 @@ async function resolveReport(id) {
     }
 }
 
+loadUserReports();
 loadAllReports();

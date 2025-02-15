@@ -140,7 +140,7 @@ function getButtonText(status) {
         case "ONGOING":
             return "MESSAGE FREELANCER";
         default:
-            return "View Details";
+            return "PROJECT UNDER REVIEW";
     }
 }
 
@@ -150,7 +150,7 @@ function redirectToPage(project) {
     } else if (project.status === "ONGOING") {
         window.location.href = `/messages/messages.html?freelancerId=${project.freelancer.id}`;
     } else {
-        alert("No action available for this project.");
+        alert("This project has not been accepted yet.");
     }
 }
 

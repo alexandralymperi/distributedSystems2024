@@ -1,11 +1,11 @@
-/* Main container */
+
 main {
     padding: 20px;
     text-align: center;
     color: #000000;
 }
 
-/* General body styling */
+
 body {
     font-family: Arial, sans-serif;
     background: url('../images/main_index.jpg') no-repeat center center fixed;
@@ -14,7 +14,7 @@ body {
     padding: 0;
 }
 
-/* Header with logo and profile button */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -24,7 +24,6 @@ header {
     color: #ffffff;
 }
 
-/* Profile button styling */
 .profile-btn {
     position: fixed;
     top: 60px;
@@ -42,7 +41,7 @@ header {
     transform: scale(1.2);
 }
 
-/* Chat container */
+
 .chat-container {
     max-width: 600px;
     margin: 50px auto;
@@ -52,14 +51,13 @@ header {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Message container */
 .message-container {
     display: flex;
     flex-direction: column;
     margin: 20px;
 }
 
-/* Each message styling */
+
 .message {
     padding: 10px;
     margin: 10px 0;
@@ -70,7 +68,7 @@ header {
     flex-direction: column;
 }
 
-/* Header containing the sender's name and the message time */
+
 .message-header {
     display: flex;
     justify-content: space-between;
@@ -79,7 +77,6 @@ header {
     margin-bottom: 5px;
 }
 
-/* Styling for the sender's name */
 .sender-name {
     font-size: 14px;
     font-weight: bold;
@@ -87,7 +84,6 @@ header {
     margin-right: 10px;
 }
 
-/* Styling for the message time */
 .message-time {
     font-size: 10px;
     color: #555;
@@ -95,7 +91,6 @@ header {
     margin-top: 5px;
 }
 
-/* Styling for the message text */
 .message-text {
     padding: 10px;
     background-color: #ff01bb;
@@ -105,7 +100,7 @@ header {
     color: white;
 }
 
-/* Sender's message styling */
+
 .sender-message {
     background-color: #ff01bb;
     color: #fff;
@@ -115,7 +110,6 @@ header {
     border-radius: 15px 15px 0 15px;
 }
 
-/* Receiver's message styling */
 .receiver-message {
     background-color: #e0e0e0;
     color: #000;
@@ -125,14 +119,13 @@ header {
     border-radius: 15px 15px 15px 0;
 }
 
-/* Input container */
+
 .input-container {
     display: flex;
     align-items: center;
     margin: 20px;
 }
 
-/* Styling for the message input field */
 .message-input {
     width: 80%;
     padding: 10px;
@@ -144,13 +137,13 @@ header {
     transition: all 0.3s ease;
 }
 
-/* Focus state for the input */
+
 .message-input:focus {
     border-color: #ff01bb;
     background-color: #fff;
 }
 
-/* Styling for the send button */
+
 .send-button {
     width: 15%;
     padding: 10px;
@@ -161,15 +154,15 @@ header {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 10px; /* Spacing between the input field and button */
+    margin-left: 10px; 
 }
 
-/* Hover state for the button */
+
 .send-button:hover {
     background-color: #f50098;
 }
 
-/* Button focus state */
+
 .send-button:focus {
     outline: none;
 }
