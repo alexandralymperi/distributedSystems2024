@@ -148,7 +148,7 @@ function redirectToPage(project) {
     if (project.status === "ACTIVE") {
         window.location.href = `/applications.html?projectId=${project.id}`;
     } else if (project.status === "ONGOING") {
-        window.location.href = `/messages/messages.html`;
+        window.location.href = `/messages/messages.html?freelancerId=${project.freelancer.id}`;
     } else {
         alert("No action available for this project.");
     }

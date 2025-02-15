@@ -84,7 +84,7 @@ public class MessagesController {
 
     }
 
-    @Secured({"ROLE_BASIC","ROLE_ADMIN"})
+    //@Secured({"ROLE_BASIC","ROLE_ADMIN"})
     @GetMapping("/conversation/{userId}") //correct
     public ResponseEntity<?> getConversation(
             @PathVariable Long userId,
@@ -92,6 +92,12 @@ public class MessagesController {
 
         try{
             Long loggedInUserId = auth.getId();
+
+            if (auth == null) {
+                // Επιστροφή 403 με custom μήνυμα
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("You are not authorized to view this conversation.");
+            }
 
             List<Messages> allMessages = mService.getMessages();
 
