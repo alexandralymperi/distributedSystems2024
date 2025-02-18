@@ -2,7 +2,6 @@ package gr.hua.dit.ds.ds2024Team77.controllers;
 
 import gr.hua.dit.ds.ds2024Team77.entities.Project;
 import gr.hua.dit.ds.ds2024Team77.entities.ProjectApplications;
-import gr.hua.dit.ds.ds2024Team77.entities.User;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectApplicationsService;
 import gr.hua.dit.ds.ds2024Team77.service.ProjectService;
 import gr.hua.dit.ds.ds2024Team77.service.UserDetailsImpl;
@@ -17,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 
 
-//TODO TRY CATCH OPOY DEN EXEI
 @RestController
 @RequestMapping("/ProjectApplication")
 public class ProjectsApplicationController {

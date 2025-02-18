@@ -1,9 +1,5 @@
 const JWTtoken = localStorage.getItem("token");
 
-if (!JWTtoken) {
-    alert("Please login first!");
-} 
-
 document.addEventListener("DOMContentLoaded", () => {
     // Ανάκτηση δεδομένων χρήστη από localStorage (αν υπάρχει)
     const token = localStorage.getItem("token"); // Ελέγχει αν υπάρχει login
@@ -24,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// **Συνάρτηση εμφάνισης/απόκρυψης κουμπιών**
+// Συνάρτηση εμφάνισης/απόκρυψης κουμπιών
 function toggleButtonsByRole(token, rolesArray) {
     const authButton = document.querySelector(".auth-button");
     const freelancerButton = document.querySelector(".freelancer-btn");
@@ -81,10 +77,11 @@ async function fetchProjects(rolesArray) {
         }
 
         const data = await response.json();
-        displayProjects(data, rolesArray); // ✅ Εμφάνιση των έργων
+        displayProjects(data, rolesArray);
     } catch (error) {
+        displayProjects(data, rolesArray);
         console.error("Error fetching projects:", error);
-        alert("Failed to load projects. Please try again later."); // ✅ Εμφάνιση σφάλματος στον χρήστη
+        alert("Failed to load projects. Please try again later.");
     }
 }
 
@@ -95,7 +92,7 @@ function displayProjects(projects, rolesArray) {
     projectContainer.innerHTML = ""; // Καθαρισμός προηγούμενων δεδομένων
 
     // Έλεγχος αν υπάρχουν ενεργά έργα
-    if (projects.length === 0) {
+    if (!projects || projects.length === 0) {
         projectContainer.innerHTML = "<p>No active projects found.</p>";
         return;
     }
