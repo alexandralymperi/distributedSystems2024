@@ -45,9 +45,8 @@ public class FreelancerApplicationController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("") //CORRECT
+    @GetMapping("")
     public List<FreelancerApplication> getFreelancerApplications() {
-        //return freelancerApplicationService.getFreelancerApplications();
 
         List<FreelancerApplication> allApplications = freelancerApplicationService.getFreelancerApplications();
 
@@ -63,7 +62,7 @@ public class FreelancerApplicationController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
-    @GetMapping("/{freelancerapplicationId}") //CORRECT
+    @GetMapping("/{freelancerapplicationId}")
     public ResponseEntity<?> getFreelancerApplication(@PathVariable Long freelancerapplicationId,
                                                                           @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<FreelancerApplication> freelancerapplication = freelancerApplicationService.getFreelancerApplication(freelancerapplicationId);
@@ -78,7 +77,7 @@ public class FreelancerApplicationController {
     }
 
     @Secured("ROLE_BASIC")
-    @PostMapping("/create") //CORRECT
+    @PostMapping("/create")
     public ResponseEntity<String> createFreelancerApplication(@RequestBody FreelancerApplication freelancerapplication,
                                           @AuthenticationPrincipal UserDetailsImpl auth){
         try{
@@ -91,7 +90,7 @@ public class FreelancerApplicationController {
         }
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"}) //CORRECT
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @DeleteMapping("/{freelancerapplicationId}")
     public ResponseEntity<String> deleteFreelancerApplication(@PathVariable Long freelancerapplicationId,
                                                               @AuthenticationPrincipal UserDetailsImpl auth){
@@ -121,7 +120,7 @@ public class FreelancerApplicationController {
         }
     }
 
-    @Secured("ROLE_ADMIN") //CORRECT
+    @Secured("ROLE_ADMIN")
     @PutMapping("/accept/{freelancerapplicationId}")
     public ResponseEntity<String> acceptFreelancerApplication(@PathVariable Long freelancerapplicationId) {
 

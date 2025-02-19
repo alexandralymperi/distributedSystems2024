@@ -30,7 +30,7 @@ public class ReportController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("")  //correct
+    @GetMapping("")
     public ResponseEntity<List<Report>> getReports(){
         try {
             List<Report> reports = rService.getReports();
@@ -42,7 +42,7 @@ public class ReportController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
-    @GetMapping("/{reportId}") //correcct
+    @GetMapping("/{reportId}")
     public ResponseEntity<?> getReport(@PathVariable Long reportId,
                                             @AuthenticationPrincipal UserDetailsImpl auth){
 
@@ -67,7 +67,7 @@ public class ReportController {
 
     }
 
-    @PostMapping("") //correct
+    @PostMapping("")
     public ResponseEntity<String> createReport(@RequestBody Report report, @AuthenticationPrincipal UserDetailsImpl auth){
 
         try {
@@ -83,7 +83,7 @@ public class ReportController {
     }
 
     @Secured({"ROLE_BASIC"})
-    @DeleteMapping("/{reportId}") //correct
+    @DeleteMapping("/{reportId}")
     public ResponseEntity<String> deleteReport(@PathVariable Long reportId,
                                                @AuthenticationPrincipal UserDetailsImpl auth){
 
@@ -94,10 +94,6 @@ public class ReportController {
 
             System.out.println(auth.getId());
             System.out.println(report.getReporter().getId());
-
-            /*if (!report.getReporter().getId().equals(auth.getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this report.");
-            }*/
 
             if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))
                     && !report.getReporter().getId().equals(auth.getId())) {
@@ -119,7 +115,7 @@ public class ReportController {
     }
 
     @Secured("ROLE_BASIC")
-    @GetMapping("/myreports") //correcct ???
+    @GetMapping("/myreports")
     public ResponseEntity<?> getMyReports(@AuthenticationPrincipal UserDetailsImpl auth){
 
         try {

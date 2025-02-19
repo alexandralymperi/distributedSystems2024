@@ -66,7 +66,7 @@ function toggleButtonsByRole(token, rolesArray) {
     }
 }
 
-// **Συνάρτηση για να φέρει τα ενεργά έργα**
+// Συνάρτηση για να φέρει τα ενεργά έργα
 async function fetchProjects(rolesArray) {
     const url = "http://localhost:8080/projects/active"; // Αντικατέστησε με την URL του API σου
     try {
@@ -118,7 +118,7 @@ function displayProjects(projects, rolesArray) {
         projectContainer.appendChild(projectCard);
     });
 
-    // **Προσθήκη event listeners μόνο στα εμφανιζόμενα κουμπιά**
+    // Προσθήκη event listeners μόνο στα εμφανιζόμενα κουμπιά
     document.querySelectorAll(".apply-button").forEach(button => {
         button.addEventListener("click", () => {
             const projectId = button.getAttribute("data-project-id");
@@ -128,7 +128,7 @@ function displayProjects(projects, rolesArray) {
 }
 
 
-// **Συνάρτηση αποστολής αίτησης (POST request)**
+//Συνάρτηση αποστολής αίτησης (POST request)
 async function applyForProject(projectId) {
     try {
         const response = await fetch(`http://localhost:8080/ProjectApplication/${projectId}`, { // Updated path
@@ -145,22 +145,21 @@ async function applyForProject(projectId) {
         if (response.ok) {
             const contentType = response.headers.get("Content-Type");
 
-            // Check if the response is JSON
             if (contentType && contentType.includes("application/json")) {
-                const data = await response.json(); // Parse as JSON
+                const data = await response.json();
                 const message = data.message || "Successfully applied for the project!";
                 alert(message);
             } else {
-                const text = await response.text(); // If not JSON, handle as plain text
+                const text = await response.text();
                 alert(text || "Successfully applied for the project!");
             }
         } else {
-            const errorData = await response.text(); // Try to get the error message as text
+            const errorData = await response.text();
             alert(errorData || "Failed to apply for the project.");
         }
     } catch (error) {
         console.error("Error loading user data:", error.message);
-        alert("An error occurred. Please try again later."); // General error message
+        alert("An error occurred. Please try again later.");
     }
 }
 

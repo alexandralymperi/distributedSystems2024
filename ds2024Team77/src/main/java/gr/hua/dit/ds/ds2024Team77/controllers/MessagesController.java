@@ -49,14 +49,14 @@ public class MessagesController {
 
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_BASIC"}) //?????
+    @Secured({"ROLE_ADMIN", "ROLE_BASIC"})
     @GetMapping("/{messageId}")
     public ResponseEntity<Messages> getMessage(@PathVariable Long messageId){
         Optional<Messages> message = mService.getMessage(messageId);
         return message.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @Secured({"ROLE_BASIC"}) //correct
+    @Secured({"ROLE_BASIC"})
     @PostMapping("/send/{recipientId}")
     public ResponseEntity<String> sendMessage(
             @PathVariable Long recipientId,
@@ -85,7 +85,7 @@ public class MessagesController {
     }
 
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
-    @GetMapping("/conversation/{userId}") //correct
+    @GetMapping("/conversation/{userId}")
     public ResponseEntity<?> getConversation(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserDetailsImpl auth) {
@@ -122,7 +122,7 @@ public class MessagesController {
     }
 
     @Secured({"ROLE_BASIC","ROLE_ADMIN"})
-    @GetMapping("/received") //correct
+    @GetMapping("/received")
     public ResponseEntity<?> getReceivedMessages(@AuthenticationPrincipal UserDetailsImpl auth) {
 
         try {

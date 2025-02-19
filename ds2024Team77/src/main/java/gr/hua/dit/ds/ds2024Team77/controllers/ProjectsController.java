@@ -28,7 +28,7 @@ public class ProjectsController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("") //CORRECT
+    @GetMapping("")
     public ResponseEntity<?> getProjects(){
 
         try{
@@ -44,7 +44,7 @@ public class ProjectsController {
         }
     }
 
-    @PostMapping("")//CORRECT
+    @PostMapping("")
     public ResponseEntity<String> createProject(@RequestBody Project project,
                                                 @AuthenticationPrincipal UserDetailsImpl auth){
 
@@ -60,13 +60,13 @@ public class ProjectsController {
 
     }
 
-    @GetMapping("/{projectId}") //CORRECT
+    @GetMapping("/{projectId}")
     public ResponseEntity<Project> getProject(@PathVariable Long projectId){
         Optional<Project> project = pService.getProject(projectId);
         return project.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/active") //CORRECT
+    @GetMapping("/active")
     public ResponseEntity<?> getActiveProjects() {
 
         try {
@@ -82,7 +82,7 @@ public class ProjectsController {
         }
     }
 
-    @GetMapping("/customer") //CORRECT
+    @GetMapping("/customer")
     public ResponseEntity<?> getProjectsByCustomer(@AuthenticationPrincipal UserDetailsImpl auth) {
 
         try {
@@ -99,7 +99,7 @@ public class ProjectsController {
 
     }
 
-    @GetMapping("/freelancer") //CORRECT
+    @GetMapping("/freelancer")
     public ResponseEntity<?> getProjectsByFreelancer(@AuthenticationPrincipal UserDetailsImpl auth) {
 
         try {
@@ -117,7 +117,7 @@ public class ProjectsController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/{projectId}/approve") //CORRECT
+    @PutMapping("/{projectId}/approve")
     public ResponseEntity<String> approveProject(@PathVariable Long projectId) {
 
         try{
@@ -134,7 +134,7 @@ public class ProjectsController {
     }
 
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{projectId}/reject") //CORRECT
+    @DeleteMapping("/{projectId}/reject")
     public ResponseEntity<String> rejectProject(@PathVariable Long projectId) {
 
         try{

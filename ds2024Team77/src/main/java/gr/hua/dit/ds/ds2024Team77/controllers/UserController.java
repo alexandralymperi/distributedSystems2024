@@ -46,7 +46,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{user_id}") //correct
+    @GetMapping("/{user_id}")
     public ResponseEntity<?> showUser(@PathVariable Long user_id,
                                          @AuthenticationPrincipal UserDetailsImpl auth) {
 
@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{user_id}/role/{role_id}") //CORRECT
+    @DeleteMapping("/{user_id}/role/{role_id}")
     public ResponseEntity<String> deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
 
         try {
@@ -104,7 +104,7 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("/{user_id}/role/{role_id}") //Correct
+    @GetMapping("/{user_id}/role/{role_id}")
     public ResponseEntity<String> addRoletoUser(@PathVariable Long user_id, @PathVariable Integer role_id) {
 
         try {

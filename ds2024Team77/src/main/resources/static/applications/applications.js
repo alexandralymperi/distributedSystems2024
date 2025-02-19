@@ -23,7 +23,7 @@ async function loadFreelancerApplications() {
             allApplications.innerHTML = "";
             apps.forEach((application) => {
                 const li = document.createElement("li");
-                li.textContent = `Id: ${application.id} - Details: ${application.description}`;
+                li.textContent = `Id: ${application.id} `;
 
                 const acceptButton = document.createElement("button");
                 acceptButton.textContent = "ACCEPT";

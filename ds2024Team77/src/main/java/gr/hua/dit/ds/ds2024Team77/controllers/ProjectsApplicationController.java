@@ -33,7 +33,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("") //CORRECT
+    @GetMapping("")
     public ResponseEntity<?> getProjectApplications(){
 
         try {
@@ -49,7 +49,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured("ROLE_BASIC")
-    @GetMapping("/{projectapplicationId}") //CORRECT
+    @GetMapping("/{projectapplicationId}")
     public ResponseEntity<?> getProjectApplication(@PathVariable Long projectapplicationId,
                                                    @AuthenticationPrincipal UserDetailsImpl auth){
         Optional<ProjectApplications> projectapplication = paService.getProjectApplication(projectapplicationId);
@@ -68,7 +68,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured("ROLE_FREELANCER")
-    @PostMapping("/{projectId}") //CORRECT
+    @PostMapping("/{projectId}")
     public ResponseEntity<String> createProjectApplication(@RequestBody ProjectApplications projectapplication,
                                          @AuthenticationPrincipal UserDetailsImpl auth,
                                          @PathVariable Long projectId){
@@ -91,7 +91,7 @@ public class ProjectsApplicationController {
 
     }
 
-    //@Secured({"ROLE_FREELANCER"})
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping("/{applicationId}")
     public ResponseEntity<String> deleteProjectApplication(@PathVariable Long applicationId){
 
@@ -108,7 +108,7 @@ public class ProjectsApplicationController {
 
     }
 
-    @PutMapping("/{applicationId}/accept") //CORRECT
+    @PutMapping("/{applicationId}/accept")
     public ResponseEntity<String> acceptApplication(@PathVariable Long applicationId,
                                                     @AuthenticationPrincipal UserDetailsImpl auth) {
 
@@ -166,7 +166,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured("ROLE_BASIC")
-    @GetMapping("/{projectId}/applications") //correct
+    @GetMapping("/{projectId}/applications")
     public ResponseEntity<List<ProjectApplications>> getApplicationsByProject(@PathVariable Long projectId,
                                                                               @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
@@ -188,7 +188,7 @@ public class ProjectsApplicationController {
     }
 
     @Secured({"ROLE_BASIC"})
-    @PutMapping("/{applicationId}/reject") //correct
+    @PutMapping("/{applicationId}/reject")
     public ResponseEntity<String> rejectApplication(@PathVariable Long applicationId,
                                                     @AuthenticationPrincipal UserDetailsImpl auth) {
         try {
