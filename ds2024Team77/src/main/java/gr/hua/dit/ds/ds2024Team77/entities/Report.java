@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
+//The Report entity represents a report (complaint) made by a user.
 @Entity
 public class Report {
 
@@ -17,6 +18,8 @@ public class Report {
     @JsonIgnore
     private Long Id;
 
+    //The user who submitted the report. Many-to-One relationship, as a user can have many references.
+    //Ignored during JSON serialization.
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "reporter_id")
     @JsonIgnore
@@ -46,7 +49,7 @@ public class Report {
         this.complaint = complaint;
         this.date = date;
     }
-
+    //Default constructor (required by JPA).
     public Report() {
 
     }

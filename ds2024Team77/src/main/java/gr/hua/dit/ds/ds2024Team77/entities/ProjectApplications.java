@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
+//The ProjectApplications entity represents a user request for a project.
+//It contains information about the project, the user who made the request, the date, and the status of the request.
 @Entity
 public class ProjectApplications {
 
@@ -17,11 +19,15 @@ public class ProjectApplications {
     private Integer Id;
 
     //Mappings
+    //The project to which the application is submitted. Many-to-One relationship, as a project can have many requests.
+    //Ignored during JSON serialization to avoid circular dependencies.
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     @JsonIgnore
     private Project project;
 
+    //The user who submitted the request. Many-to-One relationship, as a user may have submitted multiple requests.
+    //Ignored during JSON serialization.
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
@@ -43,7 +49,7 @@ public class ProjectApplications {
         this.status = "PENDING";
         this.applicationDate = applicationDate;
     }
-
+    //Default constructor (required by JPA).
     public ProjectApplications() {
 
     }

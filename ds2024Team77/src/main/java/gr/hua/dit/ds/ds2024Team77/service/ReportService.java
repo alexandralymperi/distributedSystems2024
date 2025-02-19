@@ -8,11 +8,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+//Service for the management of reports (Reports).
+//It provides functions for saving, retrieving, updating and deleting reports.
 @Service
 public class ReportService {
 
     private ReportRepository reportRepository;
 
+
+    //Constructor to initialize the ReportService with the ReportRepository.
     public ReportService(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
     }
@@ -30,6 +34,7 @@ public class ReportService {
     @Transactional
     public List<Report> getReports(){ return reportRepository.findAll(); }
 
+    //Returns all reports that have a specific status.
     @Transactional
     public List<Report> getReportsByStatus(String status) {
         return reportRepository.findByStatus(status);
@@ -44,6 +49,8 @@ public class ReportService {
         reportRepository.save(report);
     }*/
 
+    //Updates the status of the report to "IN_PROCESS".
+    //It uses the ID of the report to find and update it.
     @Transactional
     public void updateReportToInProcess(Long id) {
         Report report = reportRepository.findById(id)
@@ -59,6 +66,8 @@ public class ReportService {
         reportRepository.deleteById(id);
     }
 
+    //Deletes a reference from the database if it exists.
+    //Returns true if the deletion was successful and false if the reference was not found.
     @Transactional
     public boolean deleteReportById(final Long reportId){
         final Optional<Report> userOptional = this.reportRepository.findById(reportId);

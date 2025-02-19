@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+//Implementation of Spring Security UserDetails for user authentication and authorization.
+//This class represents the user as stored by Spring Security to check authentication.
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -19,11 +21,13 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String email;
 
+    //Ignores the property during serialization (eg, when returning the user to JSON)
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    //Constructor to initialize a UserDetailsImpl object.
     public UserDetailsImpl(Long id, String username, String email,
                            String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -33,19 +37,20 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    //Creates and returns a UserDetailsImpl object from the user.
     public static UserDetailsImpl build(User user){
-
+        //Converts the user's roles to GrantedAuthority.
         List<GrantedAuthority> authorities = (user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList()));
-
+        //Returns a new UserDetailsImpl object.
         return new UserDetailsImpl(
                 user.getId(), user.getUsername(),
                 user.getEmail(), user.getPassword(), authorities);
 
     }
 
-
+    //Returns the user's authorizations/roles
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
         return authorities;
@@ -81,6 +86,7 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+    //Implements the equals method to compare two UserDetailsImpl objects based on their ID.
     @Override
     public boolean equals(Object o){
 

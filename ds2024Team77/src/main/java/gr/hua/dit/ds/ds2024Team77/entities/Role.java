@@ -2,6 +2,11 @@ package gr.hua.dit.ds.ds2024Team77.entities;
 
 import jakarta.persistence.*;
 
+/*
+The Role entity represents a user role in the system.
+Roles are used to define user rights and permissions.
+*/
+
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -14,11 +19,11 @@ public class Role {
     @Column
     private String name;
 
-    //Constructor
+    //Default constructor (required by JPA).
     public Role(){
 
     }
-
+    //Constructor
     public Role(String name) {
         this.name = name;
     }

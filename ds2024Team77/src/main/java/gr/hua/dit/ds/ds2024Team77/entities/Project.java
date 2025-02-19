@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
+//The Project entity represents a project that can be assigned to a freelancer.
+//It includes information such as title, description, pay, status, and user requests.
 @Entity
 public class Project {
 
@@ -36,28 +38,31 @@ public class Project {
     private String status;
 
     //Mapping
+    //The user who created the project (client). Many-to-One relationship, as one client can create many projects
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
     private User customer;
 
+    //The freelancer who took on the project. Many-to-One relationship, as a freelancer may have taken on many projects.
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "freelancer_id")
     private User freelancer;
 
+    //The requests that have been made for the project by freelancers. One-to-Many relationship, as a project can have many requests.
+    //Ignored during JSON serialization to avoid circular dependencies.
     @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.PERSIST})
     private List<ProjectApplications> applications;
 
 
     //Constructors
-
     public Project(String title, String description, float pay, String status) {
         this.title = title;
         this.description = description;
         this.pay = pay;
         this.status = status;
     }
-
+    //Default constructor (required by JPA).
     public Project() {
 
     }

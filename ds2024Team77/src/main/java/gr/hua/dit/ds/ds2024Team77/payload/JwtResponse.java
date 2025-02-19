@@ -2,6 +2,8 @@ package gr.hua.dit.ds.ds2024Team77.payload;
 
 import java.util.List;
 
+//The JwtResponse class is used to send the response
+//JWT token after successful authentication.
 public class JwtResponse {
 
     private String token;
@@ -11,6 +13,7 @@ public class JwtResponse {
     private String email;
     private List<String> roles;
 
+    //JwtResponse Constructor.
     public JwtResponse(String token, String type, Long id, String username, String email, List<String> roles) {
         this.token = token;
         this.type = type;

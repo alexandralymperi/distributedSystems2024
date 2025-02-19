@@ -5,9 +5,10 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
+//The SignupRequest class is used to process new user registration data.
 public class SignupRequest {
 
-    @NotBlank
+    @NotBlank //The username must not be empty
     @Size(min=3, max=20)
     private String username;
 
@@ -26,6 +27,7 @@ public class SignupRequest {
     //@Size(max = 25)
     private String password;
 
+    // Getters και Setters
     public String getUsername() {
         return username;
     }
